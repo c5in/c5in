@@ -1,0 +1,346 @@
+/* Styles personnalisés pour le contenu Markdown */
+
+/* Code blocks avec syntax highlighting */
+.markdown-content pre {
+  @apply relative bg-gray-900 text-gray-100 p-6 my-6 overflow-x-auto border-l-4 border-blue-500;
+  border-radius: 0;
+  font-family: 'Fira Code', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+}
+
+.markdown-content pre code {
+  @apply text-sm leading-relaxed bg-transparent text-gray-100;
+  font-family: inherit;
+}
+
+/* Copy button styles */
+.copy-button-container {
+  @apply absolute top-3 right-3 z-10;
+}
+
+.copy-button {
+  @apply bg-gray-800/90 hover:bg-gray-700 text-gray-300 hover:text-white p-2.5 transition-all duration-200 border border-gray-600 hover:border-gray-400 backdrop-blur-sm;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.copy-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.copy-button.copied {
+  @apply bg-green-600 text-white border-green-500;
+  transform: scale(1.05);
+}
+
+.copy-button:focus {
+  @apply outline-none ring-2 ring-blue-400/50;
+}
+
+.copy-button:active {
+  transform: translateY(0);
+}
+
+/* Hide copy button by default, show on hover */
+.markdown-content pre .copy-button-container {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.markdown-content pre:hover .copy-button-container {
+  opacity: 1;
+}
+
+/* Always show on mobile */
+@media (max-width: 768px) {
+  .markdown-content pre .copy-button-container {
+    opacity: 1;
+  }
+}
+
+/* Syntax highlighting improvements */
+.markdown-content pre .hljs-keyword {
+  @apply text-purple-400 font-semibold;
+}
+
+.markdown-content pre .hljs-string {
+  @apply text-green-400;
+}
+
+.markdown-content pre .hljs-number {
+  @apply text-orange-400;
+}
+
+.markdown-content pre .hljs-comment {
+  @apply text-gray-500 italic;
+}
+
+.markdown-content pre .hljs-function {
+  @apply text-blue-400;
+}
+
+.markdown-content pre .hljs-variable {
+  @apply text-red-400;
+}
+
+.markdown-content pre .hljs-type {
+  @apply text-yellow-400;
+}
+
+.markdown-content pre .hljs-built_in {
+  @apply text-cyan-400;
+}
+
+.markdown-content pre .hljs-operator {
+  @apply text-pink-400;
+}
+
+.markdown-content pre .hljs-punctuation {
+  @apply text-gray-300;
+}
+
+/* Amélioration des blocs de code inline */
+.markdown-content :not(pre) > code {
+  @apply text-red-600 bg-gray-100 px-2 py-1 text-sm font-mono border border-gray-300;
+  border-radius: 3px;
+  font-family: 'Fira Code', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+}
+
+.markdown-content :not(pre) > code::before,
+.markdown-content :not(pre) > code::after {
+  content: none;
+}
+
+/* Amélioration des blockquotes */
+.markdown-content blockquote {
+  @apply border-l-4 border-blue-500 bg-gradient-to-r from-blue-50 to-transparent py-4 px-6 rounded-r-lg my-6 italic shadow-sm;
+}
+
+.markdown-content blockquote p {
+  @apply text-gray-700 mb-0;
+}
+
+/* Amélioration des tableaux */
+.markdown-content table {
+  @apply w-full border-collapse border border-gray-300 rounded-lg overflow-hidden shadow-sm my-6;
+}
+
+.markdown-content thead {
+  @apply bg-gradient-to-r from-gray-50 to-gray-100;
+}
+
+.markdown-content th {
+  @apply border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900;
+}
+
+.markdown-content td {
+  @apply border border-gray-300 px-4 py-3 text-gray-700;
+}
+
+.markdown-content tbody tr:hover {
+  @apply bg-gray-50;
+}
+
+/* Amélioration des listes */
+.markdown-content ul {
+  @apply my-6 pl-0;
+  list-style: none;
+}
+
+.markdown-content ol {
+  @apply my-6 pl-0;
+  counter-reset: list-counter;
+}
+
+.markdown-content li {
+  @apply text-gray-700 leading-relaxed mb-3 relative pl-8;
+  display: block;
+}
+
+.markdown-content ul > li::before {
+  content: "•";
+  @apply absolute left-0 top-0 text-blue-500 font-bold text-lg;
+}
+
+.markdown-content ol > li {
+  counter-increment: list-counter;
+}
+
+.markdown-content ol > li::before {
+  content: counter(list-counter) ".";
+  @apply absolute left-0 top-0 text-blue-600 font-semibold;
+}
+
+/* Listes imbriquées */
+.markdown-content ul ul {
+  @apply mt-2 mb-2 pl-4;
+  list-style-type: circle;
+}
+
+.markdown-content ul ul ul {
+  list-style-type: square;
+}
+
+.markdown-content ol ol {
+  @apply mt-2 mb-2 pl-4;
+  list-style-type: lower-alpha;
+}
+
+.markdown-content ol ol ol {
+  list-style-type: lower-roman;
+}
+
+/* Listes avec checkboxes (GitHub style) */
+.markdown-content li input[type="checkbox"] {
+  @apply mr-3 mt-1;
+  accent-color: #3b82f6;
+}
+
+.markdown-content li.task-list-item {
+  list-style-type: none;
+  @apply relative pl-0 flex items-start;
+}
+
+.markdown-content li.task-list-item input[type="checkbox"] {
+  @apply mt-1 mr-3 flex-shrink-0;
+}
+
+/* Support pour les listes avec émojis - géré par le style de base des li */
+
+/* Amélioration des titres */
+.markdown-content h1 {
+  @apply text-4xl font-bold text-gray-900 mb-8 mt-12 border-b border-gray-200 pb-4;
+}
+
+.markdown-content h2 {
+  @apply text-3xl font-bold text-blue-900 mb-6 mt-10;
+}
+
+.markdown-content h3 {
+  @apply text-2xl font-semibold text-gray-800 mb-4 mt-8;
+}
+
+.markdown-content h4 {
+  @apply text-xl font-semibold text-gray-700 mb-3 mt-6;
+}
+
+.markdown-content h5 {
+  @apply text-lg font-medium text-gray-600 mb-2 mt-4;
+}
+
+.markdown-content h6 {
+  @apply text-base font-medium text-gray-500 mb-2 mt-4 uppercase tracking-wide;
+}
+
+/* Amélioration des liens */
+.markdown-content a {
+  @apply text-blue-600 font-medium no-underline transition-colors duration-200;
+}
+
+.markdown-content a:hover {
+  @apply text-blue-800 underline;
+}
+
+/* Amélioration des images */
+.markdown-content img {
+  @apply rounded-lg shadow-md border border-gray-200 my-8 max-w-full h-auto;
+}
+
+/* Amélioration des séparateurs */
+.markdown-content hr {
+  @apply border-gray-300 my-8;
+}
+
+/* Amélioration des paragraphes */
+.markdown-content p {
+  @apply text-gray-700 leading-relaxed mb-6;
+}
+
+/* Amélioration du texte en gras et italique */
+.markdown-content strong {
+  @apply text-gray-900 font-semibold;
+}
+
+.markdown-content em {
+  @apply text-gray-600 italic;
+}
+
+/* Style pour les éléments de définition */
+.markdown-content dl {
+  @apply space-y-4;
+}
+
+.markdown-content dt {
+  @apply font-semibold text-gray-900;
+}
+
+.markdown-content dd {
+  @apply text-gray-700 ml-4;
+}
+
+/* Style pour les éléments de citation avec auteur */
+.markdown-content blockquote footer {
+  @apply text-right text-sm text-gray-600 mt-2 not-italic;
+}
+
+.markdown-content blockquote footer::before {
+  content: "— ";
+}
+
+/* Animation pour les éléments interactifs */
+.markdown-content a,
+.markdown-content code {
+  @apply transition-all duration-200;
+}
+
+/* Scrollbar styling for code blocks */
+.markdown-content pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+.markdown-content pre::-webkit-scrollbar-track {
+  @apply bg-gray-800;
+}
+
+.markdown-content pre::-webkit-scrollbar-thumb {
+  @apply bg-gray-600 hover:bg-gray-500;
+  border-radius: 4px;
+}
+
+/* Focus styles for accessibility */
+.markdown-content pre:focus-within {
+  @apply ring-2 ring-blue-500/50;
+}
+
+/* Language label for code blocks */
+.markdown-content pre[data-language]::before {
+  content: attr(data-language);
+  @apply absolute top-0 right-0 bg-gray-700 text-gray-300 px-3 py-1 text-xs uppercase font-semibold tracking-wide;
+  border-bottom-left-radius: 4px;
+}
+
+
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .markdown-content h1 {
+    @apply text-3xl;
+  }
+  
+  .markdown-content h2 {
+    @apply text-2xl;
+  }
+  
+  .markdown-content h3 {
+    @apply text-xl;
+  }
+  
+  .markdown-content table {
+    @apply text-sm;
+  }
+  
+  .markdown-content th,
+  .markdown-content td {
+    @apply px-2 py-2;
+  }
+}

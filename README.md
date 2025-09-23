@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# C5IN Website
 
-## Getting Started
+Site web officiel du Cameroon Cloud-Edge-IoT Innovation Network (C5IN).
 
-First, run the development server:
+## Description
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Ce projet est un site web statique développé avec Next.js 14+ et shadcn/ui, conçu pour présenter les activités, membres, événements et publications du réseau C5IN. Le site utilise une approche de gestion de contenu basée sur des fichiers Markdown pour faciliter la maintenance.
+
+## Technologies
+
+- **Framework:** Next.js 14+ avec App Router
+- **UI:** shadcn/ui + Tailwind CSS
+- **Langage:** TypeScript
+- **Gestion de contenu:** Markdown avec front matter
+- **Déploiement:** Génération statique (SSG)
+
+## Structure du projet
+
+```
+c5in-website/
+├── app/                          # Next.js App Router
+│   ├── (pages)/                  # Pages groupées
+│   ├── globals.css               # Styles globaux
+│   ├── layout.tsx                # Layout principal
+│   └── page.tsx                  # Page d'accueil
+├── components/                   # Composants réutilisables
+│   ├── ui/                      # shadcn/ui components
+│   ├── layout/                  # Header, Footer, Navigation
+│   ├── home/                    # Composants page d'accueil
+│   └── content/                 # Composants contenu
+├── content/                     # Contenu Markdown
+│   ├── events/                  # Événements
+│   ├── blog/                    # Articles de blog
+│   ├── members/                 # Membres
+│   └── publications/            # Publications
+├── lib/                         # Utilitaires
+├── types/                       # Types TypeScript
+└── public/                      # Assets statiques
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Cloner le repository
+2. Installer les dépendances :
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Copier le fichier d'environnement :
+   ```bash
+   cp .env.example .env.local
+   ```
 
-## Learn More
+4. Lancer le serveur de développement :
+   ```bash
+   npm run dev
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts disponibles
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `npm run dev` - Serveur de développement
+- `npm run build` - Build de production
+- `npm run start` - Serveur de production
+- `npm run lint` - Vérification du code
+- `npm run type-check` - Vérification TypeScript
+- `npm run export` - Export statique
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Gestion du contenu
 
-## Deploy on Vercel
+Le contenu est géré via des fichiers Markdown dans le dossier `content/`. Chaque type de contenu a son propre dossier et utilise le front matter YAML pour les métadonnées.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Exemple de structure d'un événement :
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```markdown
+---
+title: "Workshop Cloud Computing 2025"
+date: "2025-03-15"
+location: "Campus Ngoa-Ekellé, Yaoundé"
+tags: ["cloud", "workshop"]
+featured: true
+---
+
+Description de l'événement...
+```
+
+## Déploiement
+
+Le site est configuré pour la génération statique. Pour déployer :
+
+1. Build le projet :
+   ```bash
+   npm run build
+   ```
+
+2. Les fichiers statiques sont générés dans le dossier `out/`
+
+## Contribution
+
+1. Fork le projet
+2. Créer une branche pour votre fonctionnalité
+3. Commit vos changements
+4. Push vers la branche
+5. Ouvrir une Pull Request
