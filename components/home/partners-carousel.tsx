@@ -60,6 +60,8 @@ export function PartnersCarousel({ partners, autoPlay = true }: PartnersCarousel
               opts={{
                 align: 'start',
                 loop: true,
+                dragFree: true,
+                containScroll: 'trimSnaps',
               }}
               plugins={autoplayPlugin ? [autoplayPlugin] : undefined}
             >
@@ -104,7 +106,7 @@ export function PartnersCarousel({ partners, autoPlay = true }: PartnersCarousel
                             href={partner.website as Route}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors duration-300 mt-auto"
+                            className="inline-flex items-center text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors duration-300 mt-auto p-2 rounded touch-manipulation min-h-[44px] justify-center"
                             aria-label={`Visiter le site web de ${partner.name}`}
                           >
                             Visiter le site
@@ -118,22 +120,28 @@ export function PartnersCarousel({ partners, autoPlay = true }: PartnersCarousel
               </CarouselContent>
               
               {/* Navigation Arrows */}
-              <CarouselPrevious className="hidden md:flex -left-12 bg-white border-slate-200 hover:bg-slate-50" />
-              <CarouselNext className="hidden md:flex -right-12 bg-white border-slate-200 hover:bg-slate-50" />
+              <CarouselPrevious className="hidden sm:flex -left-12 bg-white border-slate-200 hover:bg-slate-50 shadow-md" />
+              <CarouselNext className="hidden sm:flex -right-12 bg-white border-slate-200 hover:bg-slate-50 shadow-md" />
             </Carousel>
             
             {/* Dots Indicator */}
             {count > 1 && (
-              <div className="flex justify-center space-x-2 mt-8">
+              <div className="flex justify-center space-x-3 mt-8">
                 {Array.from({ length: count }).map((_, index) => (
                   <button
                     key={index}
-                    className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                      index + 1 === current ? 'bg-blue-600' : 'bg-slate-300 hover:bg-slate-400'
+                    className={`rounded-full transition-all duration-300 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center ${
+                      index + 1 === current 
+                        ? 'bg-blue-600' 
+                        : 'bg-slate-300 hover:bg-slate-400 active:bg-slate-500'
                     }`}
                     onClick={() => api?.scrollTo(index)}
                     aria-label={`Aller à la diapositive ${index + 1}`}
-                  />
+                  >
+                    <div className={`w-2 h-2 rounded-full ${
+                      index + 1 === current ? 'bg-white' : 'bg-white/70'
+                    }`} />
+                  </button>
                 ))}
               </div>
             )}

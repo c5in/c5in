@@ -68,6 +68,8 @@ export function MembersCarousel({ members, autoPlay = true, showDots = true }: M
               opts={{
                 align: 'start',
                 loop: true,
+                dragFree: true,
+                containScroll: 'trimSnaps',
               }}
               plugins={autoplayPlugin ? [autoplayPlugin] : undefined}
             >
@@ -123,7 +125,7 @@ export function MembersCarousel({ members, autoPlay = true, showDots = true }: M
                                   href={link.url as Route}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="p-2 rounded-full bg-slate-100 text-slate-600 hover:bg-blue-100 hover:text-blue-600 transition-colors duration-300"
+                                  className="p-3 rounded-full bg-slate-100 text-slate-600 hover:bg-blue-100 hover:text-blue-600 transition-colors duration-300 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
                                   aria-label={`${member.name} sur ${link.platform}`}
                                 >
                                   {IconComponent && <IconComponent className="w-4 h-4" />}
@@ -139,22 +141,28 @@ export function MembersCarousel({ members, autoPlay = true, showDots = true }: M
               </CarouselContent>
               
               {/* Navigation Arrows */}
-              <CarouselPrevious className="hidden md:flex -left-12 bg-white border-slate-200 hover:bg-slate-50" />
-              <CarouselNext className="hidden md:flex -right-12 bg-white border-slate-200 hover:bg-slate-50" />
+              <CarouselPrevious className="hidden sm:flex -left-12 bg-white border-slate-200 hover:bg-slate-50 shadow-md" />
+              <CarouselNext className="hidden sm:flex -right-12 bg-white border-slate-200 hover:bg-slate-50 shadow-md" />
             </Carousel>
             
             {/* Dots Indicator */}
             {showDots && count > 1 && (
-              <div className="flex justify-center space-x-2 mt-8">
+              <div className="flex justify-center space-x-3 mt-8">
                 {Array.from({ length: count }).map((_, index) => (
                   <button
                     key={index}
-                    className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                      index + 1 === current ? 'bg-blue-600' : 'bg-slate-300 hover:bg-slate-400'
+                    className={`rounded-full transition-all duration-300 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center ${
+                      index + 1 === current 
+                        ? 'bg-blue-600' 
+                        : 'bg-slate-300 hover:bg-slate-400 active:bg-slate-500'
                     }`}
                     onClick={() => api?.scrollTo(index)}
                     aria-label={`Aller à la diapositive ${index + 1}`}
-                  />
+                  >
+                    <div className={`w-2 h-2 rounded-full ${
+                      index + 1 === current ? 'bg-white' : 'bg-white/70'
+                    }`} />
+                  </button>
                 ))}
               </div>
             )}

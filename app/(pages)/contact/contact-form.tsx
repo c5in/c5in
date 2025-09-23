@@ -146,10 +146,10 @@ export function ContactForm() {
         </Card>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-6">
         {/* Name Field */}
-        <div>
-          <Label htmlFor="name" className="text-slate-700 font-medium">
+        <div className="space-y-2">
+          <Label htmlFor="name" className="text-slate-700 font-semibold text-base block">
             Nom complet *
           </Label>
           <Input
@@ -157,21 +157,22 @@ export function ContactForm() {
             type="text"
             value={formData.name}
             onChange={(e) => handleInputChange('name', e.target.value)}
-            className={`mt-2 ${errors.name ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}`}
+            className={`w-full text-base px-4 py-3 min-h-[48px] rounded-lg border-2 transition-all duration-200 touch-manipulation ${errors.name ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'}`}
             placeholder="Votre nom complet"
             disabled={isSubmitting}
+            autoComplete="name"
           />
           {errors.name && (
-            <p className="mt-1 text-sm text-red-600 flex items-center">
-              <AlertCircle className="h-4 w-4 mr-1" />
-              {errors.name}
+            <p className="mt-2 text-sm text-red-600 flex items-start">
+              <AlertCircle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
+              <span>{errors.name}</span>
             </p>
           )}
         </div>
 
         {/* Email Field */}
-        <div>
-          <Label htmlFor="email" className="text-slate-700 font-medium">
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-slate-700 font-semibold text-base block">
             Adresse email *
           </Label>
           <Input
@@ -179,21 +180,23 @@ export function ContactForm() {
             type="email"
             value={formData.email}
             onChange={(e) => handleInputChange('email', e.target.value)}
-            className={`mt-2 ${errors.email ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}`}
+            className={`w-full text-base px-4 py-3 min-h-[48px] rounded-lg border-2 transition-all duration-200 touch-manipulation ${errors.email ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'}`}
             placeholder="votre.email@exemple.com"
             disabled={isSubmitting}
+            autoComplete="email"
+            inputMode="email"
           />
           {errors.email && (
-            <p className="mt-1 text-sm text-red-600 flex items-center">
-              <AlertCircle className="h-4 w-4 mr-1" />
-              {errors.email}
+            <p className="mt-2 text-sm text-red-600 flex items-start">
+              <AlertCircle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
+              <span>{errors.email}</span>
             </p>
           )}
         </div>
 
         {/* Subject Field */}
-        <div>
-          <Label htmlFor="subject" className="text-slate-700 font-medium">
+        <div className="space-y-2">
+          <Label htmlFor="subject" className="text-slate-700 font-semibold text-base block">
             Sujet *
           </Label>
           <Input
@@ -201,62 +204,64 @@ export function ContactForm() {
             type="text"
             value={formData.subject}
             onChange={(e) => handleInputChange('subject', e.target.value)}
-            className={`mt-2 ${errors.subject ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}`}
+            className={`w-full text-base px-4 py-3 min-h-[48px] rounded-lg border-2 transition-all duration-200 touch-manipulation ${errors.subject ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'}`}
             placeholder="Objet de votre message"
             disabled={isSubmitting}
+            autoComplete="off"
           />
           {errors.subject && (
-            <p className="mt-1 text-sm text-red-600 flex items-center">
-              <AlertCircle className="h-4 w-4 mr-1" />
-              {errors.subject}
+            <p className="mt-2 text-sm text-red-600 flex items-start">
+              <AlertCircle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
+              <span>{errors.subject}</span>
             </p>
           )}
         </div>
 
         {/* Message Field */}
-        <div>
-          <Label htmlFor="message" className="text-slate-700 font-medium">
+        <div className="space-y-2">
+          <Label htmlFor="message" className="text-slate-700 font-semibold text-base block">
             Message *
           </Label>
           <Textarea
             id="message"
             value={formData.message}
             onChange={(e) => handleInputChange('message', e.target.value)}
-            className={`mt-2 min-h-[120px] ${errors.message ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}`}
+            className={`w-full text-base px-4 py-3 min-h-[140px] sm:min-h-[120px] rounded-lg border-2 transition-all duration-200 touch-manipulation resize-vertical ${errors.message ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'}`}
             placeholder="Décrivez votre demande, projet ou question..."
             disabled={isSubmitting}
+            rows={6}
           />
           {errors.message && (
-            <p className="mt-1 text-sm text-red-600 flex items-center">
-              <AlertCircle className="h-4 w-4 mr-1" />
-              {errors.message}
+            <p className="mt-2 text-sm text-red-600 flex items-start">
+              <AlertCircle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
+              <span>{errors.message}</span>
             </p>
           )}
         </div>
 
         {/* Submit Button */}
-        <div className="pt-4">
+        <div className="pt-4 sm:pt-6">
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 text-base rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[52px] flex items-center justify-center"
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                Envoi en cours...
+                <Loader2 className="h-5 w-5 mr-3 animate-spin" />
+                <span>Envoi en cours...</span>
               </>
             ) : (
               <>
-                <Send className="h-5 w-5 mr-2" />
-                Envoyer le message
+                <Send className="h-5 w-5 mr-3" />
+                <span>Envoyer le message</span>
               </>
             )}
           </Button>
         </div>
 
         {/* Required Fields Note */}
-        <p className="text-sm text-slate-600 text-center">
+        <p className="text-sm text-slate-600 text-center pt-2">
           * Champs obligatoires
         </p>
       </form>

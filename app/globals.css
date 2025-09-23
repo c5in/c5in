@@ -385,3 +385,377 @@ code:not(.hljs) {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Mobile Typography Optimizations */
+@media (max-width: 640px) {
+  /* Improved mobile typography scale */
+  h1 {
+    font-size: 2rem !important; /* 32px - reduced from desktop */
+    line-height: 1.2 !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  h2 {
+    font-size: 1.75rem !important; /* 28px - reduced from desktop */
+    line-height: 1.3 !important;
+    margin-bottom: 0.875rem !important;
+  }
+  
+  h3 {
+    font-size: 1.375rem !important; /* 22px - reduced from desktop */
+    line-height: 1.4 !important;
+    margin-bottom: 0.75rem !important;
+  }
+  
+  h4 {
+    font-size: 1.125rem !important; /* 18px */
+    line-height: 1.4 !important;
+    margin-bottom: 0.625rem !important;
+  }
+  
+  /* Body text optimizations for mobile readability */
+  body {
+    font-size: 1rem !important; /* 16px - maintain for readability */
+    line-height: 1.6 !important; /* Increased for better mobile reading */
+  }
+  
+  p {
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  /* Small text should remain readable on mobile */
+  .text-sm {
+    font-size: 0.9rem !important; /* 14.4px - slightly larger than default */
+    line-height: 1.5 !important;
+  }
+  
+  .text-xs {
+    font-size: 0.8rem !important; /* 12.8px - slightly larger than default */
+    line-height: 1.4 !important;
+  }
+  
+  /* Improved mobile spacing */
+  .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  /* Section spacing optimization */
+  .c5in-section {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+  
+  /* Card spacing optimization */
+  .c5in-card {
+    padding: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+}
+
+/* Touch optimization styles */
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+/* Mobile-first touch targets */
+@media (max-width: 640px) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Ensure all interactive elements meet touch target requirements */
+  button, 
+  [role="button"], 
+  input[type="button"], 
+  input[type="submit"], 
+  input[type="reset"], 
+  a:not(.prose a):not(p a) {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1rem; /* Increased padding for better touch */
+    touch-action: manipulation;
+  }
+  
+  /* Form inputs optimization */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  input[type="search"],
+  textarea,
+  select {
+    min-height: 44px !important;
+    padding: 0.75rem !important;
+    font-size: 1rem !important; /* Prevent zoom on iOS */
+    line-height: 1.5 !important;
+    border-radius: 0.5rem !important;
+    touch-action: manipulation;
+  }
+  
+  /* Textarea specific optimization */
+  textarea {
+    min-height: 120px !important;
+    resize: vertical;
+  }
+  
+  /* Exception for text links in paragraphs */
+  p a, 
+  .prose a {
+    min-height: auto;
+    display: inline;
+    padding: 0.25rem 0.125rem;
+    touch-action: manipulation;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  
+  /* Navigation links optimization */
+  nav a {
+    padding: 0.75rem 1rem !important;
+    margin: 0.125rem 0 !important;
+    border-radius: 0.5rem !important;
+    touch-action: manipulation;
+  }
+  
+  /* Button spacing in groups */
+  .flex.gap-4 > button,
+  .flex.gap-4 > a {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Form field spacing */
+  .space-y-6 > div {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  /* Label improvements */
+  label {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.5rem !important;
+    display: block !important;
+  }
+  
+  /* Error message improvements */
+  .text-red-600 {
+    font-size: 0.9rem !important;
+    line-height: 1.4 !important;
+    margin-top: 0.375rem !important;
+  }
+  
+  /* Card improvements */
+  .card {
+    padding: 1.25rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  /* List improvements */
+  ul, ol {
+    padding-left: 1.25rem !important;
+  }
+  
+  li {
+    margin-bottom: 0.5rem !important;
+    line-height: 1.6 !important;
+  }
+}
+
+/* Smooth scrolling for mobile navigation */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Carousel smooth transitions */
+  .embla__container {
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.focus-visible\:ring-2:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--c5in-primary);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .carousel-dot {
+    border: 2px solid currentColor;
+  }
+  
+  .carousel-arrow {
+    border: 2px solid currentColor;
+    background-color: white;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .carousel-content,
+  .mobile-menu,
+  .carousel-dot,
+  .carousel-arrow {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Additional mobile optimizations */
+@media (max-width: 640px) {
+  /* Improve readability for small screens */
+  .prose {
+    font-size: 1rem !important;
+    line-height: 1.7 !important;
+  }
+  
+  .prose h1 {
+    font-size: 1.875rem !important; /* 30px */
+    line-height: 1.2 !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .prose h2 {
+    font-size: 1.5rem !important; /* 24px */
+    line-height: 1.3 !important;
+    margin-bottom: 0.875rem !important;
+  }
+  
+  .prose h3 {
+    font-size: 1.25rem !important; /* 20px */
+    line-height: 1.4 !important;
+    margin-bottom: 0.75rem !important;
+  }
+  
+  /* Optimize table display on mobile */
+  .prose table {
+    font-size: 0.875rem !important;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  /* Better mobile image handling */
+  .prose img {
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 0.5rem !important;
+    margin: 1rem 0 !important;
+  }
+  
+  /* Mobile-optimized code blocks */
+  .prose pre {
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    padding: 1rem !important;
+    overflow-x: auto;
+    border-radius: 0.5rem !important;
+  }
+  
+  /* Better mobile blockquote */
+  .prose blockquote {
+    margin: 1rem 0 !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+  }
+  
+  /* Mobile navigation improvements */
+  .mobile-nav-item {
+    padding: 1rem !important;
+    margin: 0.25rem 0 !important;
+    border-radius: 0.5rem !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+  }
+  
+  /* Carousel touch improvements */
+  .carousel-container {
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Form improvements for mobile */
+  .form-container {
+    padding: 1rem !important;
+  }
+  
+  .form-field {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  /* Better mobile card spacing */
+  .card-grid {
+    gap: 1rem !important;
+  }
+  
+  .card-content {
+    padding: 1rem !important;
+  }
+  
+  /* Mobile hero adjustments */
+  .hero-content {
+    padding: 1rem !important;
+    text-align: center;
+  }
+  
+  .hero-title {
+    font-size: 2rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.125rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .hero-description {
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  /* Mobile button improvements */
+  .btn-mobile {
+    width: 100% !important;
+    padding: 0.875rem 1.5rem !important;
+    font-size: 1rem !important;
+    margin-bottom: 0.75rem !important;
+    min-height: 48px !important;
+    touch-action: manipulation;
+  }
+  
+  /* Mobile list improvements */
+  .mobile-list li {
+    padding: 0.5rem 0 !important;
+    line-height: 1.6 !important;
+  }
+  
+  /* Mobile grid improvements */
+  .mobile-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  /* Mobile spacing utilities */
+  .mobile-space-y-4 > * + * {
+    margin-top: 1rem !important;
+  }
+  
+  .mobile-space-y-6 > * + * {
+    margin-top: 1.5rem !important;
+  }
+  
+  .mobile-space-y-8 > * + * {
+    margin-top: 2rem !important;
+  }
+}

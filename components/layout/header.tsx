@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -25,6 +25,25 @@ export function Header({ navigation = siteConfig.navigation }: HeaderProps) {
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false)
   }
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isMobileMenuOpen])
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    closeMobileMenu()
+  }, [pathname])
 
   const isActiveLink = (href: string) => {
     if (href === '/') {
@@ -74,40 +93,61 @@ export function Header({ navigation = siteConfig.navigation }: HeaderProps) {
           <div className="md:hidden">
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={toggleMobileMenu}
-              aria-label="Toggle mobile menu"
-              className="h-9 w-9 p-0"
+              aria-label={isMobileMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation"
+              className="h-12 w-12 p-0 touch-manipulation min-h-[48px] min-w-[48px] rounded-lg hover:bg-slate-100 active:bg-slate-200 transition-colors duration-200"
             >
               {isMobileMenuOpen ? (
-                <X className="h-5 w-5" />
+                <X className="h-6 w-6" />
               ) : (
-                <Menu className="h-5 w-5" />
+                <Menu className="h-6 w-6" />
               )}
             </Button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden">
-            <div className="space-y-1 pb-3 pt-2">
-              {navigation.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href as Route}
-                  onClick={closeMobileMenu}
-                  className={`block px-3 py-2 text-base font-medium transition-colors hover:bg-slate-50 hover:text-blue-600 ${
-                    isActiveLink(item.href)
-                      ? 'text-blue-600 bg-blue-50 border-l-4 border-blue-600'
-                      : 'text-slate-600'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
+        <div 
+          className={`md:hidden transition-all duration-300 ease-in-out overflow-hidden ${
+            isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          }`}
+          id="mobile-navigation"
+        >
+          <div className="space-y-1 pb-4 pt-3 border-t border-slate-200">
+            {navigation.map((item, index) => (
+              <Link
+                key={item.href}
+                href={item.href as Route}
+                onClick={closeMobileMenu}
+                className={`block px-4 py-4 text-base font-medium transition-all duration-200 touch-manipulation min-h-[52px] flex items-center transform rounded-lg mx-2 ${
+                  isMobileMenuOpen 
+                    ? 'translate-x-0 opacity-100' 
+                    : '-translate-x-4 opacity-0'
+                } ${
+                  isActiveLink(item.href)
+                    ? 'text-blue-600 bg-blue-50 border-l-4 border-blue-600 font-semibold'
+                    : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600 active:bg-slate-100'
+                }`}
+                style={{
+                  transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms'
+                }}
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
+        </div>
+
+        {/* Mobile Menu Backdrop */}
+        {isMobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
+            onClick={closeMobileMenu}
+            aria-hidden="true"
+          />
         )}
       </div>
     </header>
