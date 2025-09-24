@@ -30,7 +30,7 @@ const socialIcons = {
 
 export default function ContactPage() {
   return (
-    <div className="container mx-auto px-4 py-12 max-w-6xl">
+    <div className="container mx-auto px-4 pb-12 pt-32 max-w-6xl">
       {/* Page Header */}
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">

@@ -5,6 +5,8 @@ import { EventContent, PaginatedResult } from '@/types'
 import { generateSEOMetadata } from '@/components/seo'
 import EventsListing from './events-listing'
 import { Card, CardContent } from '@/components/ui/card'
+import { PageHeader } from '@/components/ui/page-header'
+import { Calendar } from 'lucide-react'
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Événements',
@@ -97,23 +99,29 @@ export default async function EventsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Événements</h1>
-        <p className="text-lg text-gray-600 max-w-3xl">
-          Découvrez tous les événements organisés par C5IN : workshops, conférences, 
-          séminaires et formations dans les domaines du Cloud Computing, Edge Computing, 
-          IoT, Green Computing et Federated Learning.
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br pt-16 from-gray-50 to-white">
+      <PageHeader
+        badge={{ icon: Calendar, text: "Événements C5IN" }}
+        title="Innovation & Rencontres"
+        subtitle="Workshops & Conférences"
+        description="Découvrez tous les événements organisés par C5IN : workshops, conférences, séminaires et formations dans les domaines du Cloud Computing, Edge Computing, IoT, Green Computing et Federated Learning."
+        stats={[
+          { value: result.pagination.totalItems, label: "Événements", color: "blue" },
+          { value: allTags.length, label: "Thématiques", color: "green" },
+          { value: "15+", label: "Intervenants", color: "purple" },
+          { value: "500+", label: "Participants", color: "orange" }
+        ]}
+      />
 
-      <Suspense fallback={<EventsLoadingSkeleton />}>
-        <EventsListing 
-          initialData={result}
-          allTags={allTags}
-          searchParams={{}}
-        />
-      </Suspense>
+      <div className="container mx-auto px-4  pb-12">
+        <Suspense fallback={<EventsLoadingSkeleton />}>
+          <EventsListing 
+            initialData={result}
+            allTags={allTags}
+            searchParams={{}}
+          />
+        </Suspense>
+      </div>
     </div>
   )
 }

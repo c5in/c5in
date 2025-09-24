@@ -5,6 +5,8 @@ import { Member, PaginatedResult } from '@/types'
 import { generateSEOMetadata } from '@/components/seo'
 import MembersListing from './members-listing'
 import { Card, CardContent } from '@/components/ui/card'
+import { PageHeader } from '@/components/ui/page-header'
+import { Users } from 'lucide-react'
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Membres',
@@ -99,23 +101,29 @@ export default async function MembersPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Nos Membres</h1>
-        <p className="text-lg text-gray-600 max-w-3xl">
-          Découvrez l&apos;équipe d&apos;experts du C5IN : chercheurs, professeurs et spécialistes 
-          qui façonnent l&apos;avenir des technologies cloud, edge computing, IoT, green computing 
-          et federated learning en Afrique.
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br pt-16 from-gray-50 to-white">
+      <PageHeader
+        badge={{ icon: Users, text: "Équipe C5IN" }}
+        title="Nos Experts"
+        subtitle="Chercheurs & Innovateurs"
+        description="Découvrez l'équipe d'experts du C5IN : chercheurs, professeurs et spécialistes qui façonnent l'avenir des technologies cloud, edge computing, IoT, green computing et federated learning en Afrique."
+        stats={[
+          { value: result.pagination.totalItems, label: "Membres", color: "blue" },
+          { value: affiliations.length, label: "Institutions", color: "green" },
+          { value: "5", label: "Domaines", color: "purple" },
+          { value: "15+", label: "Publications", color: "orange" }
+        ]}
+      />
 
-      <Suspense fallback={<MembersLoadingSkeleton />}>
-        <MembersListing 
-          initialData={result}
-          affiliations={affiliations}
-          searchParams={{}}
-        />
-      </Suspense>
+      <div className="container mx-auto px-4  pb-12">
+        <Suspense fallback={<MembersLoadingSkeleton />}>
+          <MembersListing 
+            initialData={result}
+            affiliations={affiliations}
+            searchParams={{}}
+          />
+        </Suspense>
+      </div>
     </div>
   )
 }

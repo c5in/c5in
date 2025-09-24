@@ -10,21 +10,18 @@ import {
   Calendar, 
   MapPin, 
   Users, 
-  Search, 
-  Filter, 
   X, 
   Star, 
   ExternalLink,
   ArrowRight,
   ChevronLeft,
-  ChevronRight,
-  Sparkles
+  ChevronRight
 } from 'lucide-react'
 import { EventContent, PaginatedResult } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { ContentFilters } from '@/components/ui/content-filters'
 
 interface EventsListingProps {
   initialData: PaginatedResult<EventContent>
@@ -259,9 +256,7 @@ export default function EventsListing({
 }: EventsListingProps) {
   const router = useRouter()
   const urlSearchParams = useSearchParams()
-  const [searchQuery, setSearchQuery] = useState(searchParams.search || '')
   const [selectedTag, setSelectedTag] = useState(searchParams.tag || '')
-  const [showFilters, setShowFilters] = useState(false)
 
   const updateURL = (params: Record<string, string | undefined>) => {
     const newParams = new URLSearchParams(urlSearchParams.toString())
@@ -275,17 +270,12 @@ export default function EventsListing({
     })
     
     // Reset page when filtering
-    if (params.tag !== undefined || params.search !== undefined) {
+    if (params.tag !== undefined) {
       newParams.delete('page')
     }
     
     const queryString = newParams.toString()
     router.push(`/events${queryString ? `?${queryString}` : ''}` as Route)
-  }
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    updateURL({ search: searchQuery || undefined })
   }
 
   const handleTagFilter = (tag: string) => {
@@ -294,106 +284,30 @@ export default function EventsListing({
   }
 
   const clearFilters = () => {
-    setSearchQuery('')
     setSelectedTag('')
     router.push('/events' as Route)
   }
 
-  const hasActiveFilters = searchParams.search || searchParams.tag
+  const hasActiveFilters = searchParams.tag
 
   const baseUrl = `/events?${new URLSearchParams({
-    ...(searchParams.search && { search: searchParams.search }),
     ...(searchParams.tag && { tag: searchParams.tag }),
   }).toString()}`
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent mb-4">
-            Événements
-          </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Découvrez tous nos événements à venir et rejoignez notre communauté
-          </p>
-        </div>
+        
+
+        <ContentFilters
+          availableTags={allTags}
+          selectedTag={searchParams.tag}
+          onTagFilter={handleTagFilter}
+          onClearFilters={clearFilters}
+          hasActiveFilters={!!searchParams.tag}
+        />
 
         <div className="space-y-8">
-          {/* Search and Filters */}
-          <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600/5 to-purple-600/5 p-6">
-              <div className="flex flex-col lg:flex-row gap-4">
-                {/* Search */}
-                <form onSubmit={handleSearch} className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-                    <Input
-                      type="text"
-                      placeholder="Rechercher un événement..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-12 h-12 bg-white/80 border-slate-200 focus:border-blue-300 focus:ring-blue-100 rounded-xl text-slate-900 placeholder:text-slate-500"
-                    />
-                  </div>
-                </form>
-                
-                {/* Filter Toggle */}
-                <Button
-                  variant="outline"
-                  onClick={() => setShowFilters(!showFilters)}
-                  className="lg:w-auto h-12 bg-white/80 border-slate-200 hover:bg-white hover:border-blue-300 rounded-xl font-medium"
-                >
-                  <Filter className="w-4 h-4 mr-2" />
-                  Filtres
-                  {hasActiveFilters && (
-                    <Badge className="ml-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-                      {(searchParams.search ? 1 : 0) + (searchParams.tag ? 1 : 0)}
-                    </Badge>
-                  )}
-                </Button>
-                
-                {hasActiveFilters && (
-                  <Button 
-                    variant="ghost" 
-                    onClick={clearFilters}
-                    className="h-12 hover:bg-red-50 hover:text-red-600 rounded-xl"
-                  >
-                    <X className="w-4 h-4 mr-2" />
-                    Effacer
-                  </Button>
-                )}
-              </div>
-              
-              {/* Filters Panel */}
-              {showFilters && (
-                <div className="mt-6 pt-6 border-t border-slate-200">
-                  <div>
-                    <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-purple-600" />
-                      Filtrer par tag
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {allTags.map((tag) => (
-                        <Button
-                          key={tag}
-                          variant={selectedTag === tag ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => handleTagFilter(tag)}
-                          className={selectedTag === tag ?
-                            "text-xs bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700" :
-                            "text-xs bg-white/60 border-slate-200 hover:bg-white hover:border-blue-300 hover:text-blue-600"
-                          }
-                        >
-                          {tag}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </Card>
 
           {/* Results Summary */}
           <div className="flex items-center justify-between">

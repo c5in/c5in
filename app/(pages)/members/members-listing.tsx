@@ -4,13 +4,13 @@ import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Route } from 'next'
-import { Mail, Linkedin, Twitter, Github, ExternalLink, Search, Filter, X, Users, GraduationCap } from 'lucide-react'
+import { Mail, Linkedin, Twitter, Github, ExternalLink, Users, GraduationCap } from 'lucide-react'
 import { Member, PaginatedResult } from '@/types'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { ContentFilters } from '@/components/ui/content-filters'
 
 interface MembersListingProps {
   initialData: PaginatedResult<Member>
@@ -208,10 +208,8 @@ export default function MembersListing({
 }: MembersListingProps) {
   const router = useRouter()
   const urlSearchParams = useSearchParams()
-  const [searchQuery, setSearchQuery] = useState(searchParams.search || '')
   const [selectedAffiliation, setSelectedAffiliation] = useState(searchParams.affiliation || '')
   const [showFeaturedOnly, setShowFeaturedOnly] = useState(searchParams.featured === 'true')
-  const [showFilters, setShowFilters] = useState(false)
 
   const updateURL = (params: Record<string, string | undefined>) => {
     const newParams = new URLSearchParams(urlSearchParams.toString())
@@ -225,7 +223,7 @@ export default function MembersListing({
     })
     
     // Reset page when filtering
-    if (params.affiliation !== undefined || params.search !== undefined || params.featured !== undefined) {
+    if (params.affiliation !== undefined || params.featured !== undefined) {
       newParams.delete('page')
     }
     
@@ -233,10 +231,7 @@ export default function MembersListing({
     router.push(`/members${queryString ? `?${queryString}` : ''}` as Route)
   }
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    updateURL({ search: searchQuery || undefined })
-  }
+
 
   const handleAffiliationFilter = (affiliation: string) => {
     setSelectedAffiliation(affiliation === selectedAffiliation ? '' : affiliation)
@@ -250,16 +245,14 @@ export default function MembersListing({
   }
 
   const clearFilters = () => {
-    setSearchQuery('')
     setSelectedAffiliation('')
     setShowFeaturedOnly(false)
     router.push('/members' as Route)
   }
 
-  const hasActiveFilters = searchParams.search || searchParams.affiliation || searchParams.featured
+  const hasActiveFilters = searchParams.affiliation || searchParams.featured
 
   const baseUrl = `/members?${new URLSearchParams({
-    ...(searchParams.search && { search: searchParams.search }),
     ...(searchParams.affiliation && { affiliation: searchParams.affiliation }),
     ...(searchParams.featured && { featured: searchParams.featured }),
   }).toString()}`
@@ -273,85 +266,28 @@ export default function MembersListing({
 
   return (
     <div className="space-y-6">
-      {/* Search and Filters */}
-      <div className="bg-gray-50 rounded-lg p-6">
-        <div className="flex flex-col lg:flex-row gap-4">
-          {/* Search */}
-          <form onSubmit={handleSearch} className="flex-1">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                type="text"
-                placeholder="Rechercher un membre..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </form>
-          
-          {/* Filter Toggle */}
+      <ContentFilters
+        availableTags={affiliations}
+        selectedTag={selectedAffiliation}
+        onTagFilter={handleAffiliationFilter}
+        onClearFilters={clearFilters}
+        hasActiveFilters={Boolean(selectedAffiliation || showFeaturedOnly)}
+      />
+
+      {/* Featured Filter */}
+      {showFeaturedOnly && (
+        <div className="flex justify-center mb-4">
           <Button
-            variant="outline"
-            onClick={() => setShowFilters(!showFilters)}
-            className="lg:w-auto"
+            variant="default"
+            size="sm"
+            onClick={handleFeaturedFilter}
+            className="text-xs"
           >
-            <Filter className="w-4 h-4 mr-2" />
-            Filtres
-            {hasActiveFilters && (
-              <Badge variant="secondary" className="ml-2">
-                {(searchParams.search ? 1 : 0) + 
-                 (searchParams.affiliation ? 1 : 0) + 
-                 (searchParams.featured ? 1 : 0)}
-              </Badge>
-            )}
+            <Users className="w-4 h-4 mr-2" />
+            Membres vedettes uniquement
           </Button>
-          
-          {hasActiveFilters && (
-            <Button variant="ghost" onClick={clearFilters}>
-              <X className="w-4 h-4 mr-2" />
-              Effacer
-            </Button>
-          )}
         </div>
-        
-        {/* Filters Panel */}
-        {showFilters && (
-          <div className="mt-4 pt-4 border-t space-y-4">
-            {/* Featured Filter */}
-            <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-3">Affichage</h3>
-              <Button
-                variant={showFeaturedOnly ? "default" : "outline"}
-                size="sm"
-                onClick={handleFeaturedFilter}
-                className="text-xs"
-              >
-                <Users className="w-4 h-4 mr-2" />
-                Membres vedettes uniquement
-              </Button>
-            </div>
-            
-            {/* Affiliation Filter */}
-            <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-3">Filtrer par affiliation</h3>
-              <div className="flex flex-wrap gap-2">
-                {affiliations.map((affiliation) => (
-                  <Button
-                    key={affiliation}
-                    variant={selectedAffiliation === affiliation ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handleAffiliationFilter(affiliation)}
-                    className="text-xs"
-                  >
-                    {affiliation}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Results Summary */}
       <div className="flex items-center justify-between">

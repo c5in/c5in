@@ -3,7 +3,8 @@ import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { researchDomains } from '@/lib/config'
 import { generateSEOMetadata } from '@/components/seo'
-import { Cloud, Cpu, Wifi, Leaf, Brain, Users, Target, Lightbulb, Calendar } from 'lucide-react'
+import { PageHeader } from '@/components/ui/page-header'
+import { Cloud, Cpu, Wifi, Leaf, Brain, Users, Target, Lightbulb, Calendar, Info } from 'lucide-react'
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'À propos',
@@ -22,17 +23,21 @@ const iconMap = {
 
 export default function AboutPage() {
   return (
-    <div className="container mx-auto px-4 py-12 max-w-6xl">
-      {/* Page Header */}
-      <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-          À propos de C5IN
-        </h1>
-        <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-          Le Cameroon Cloud-Edge-IoT Innovation Network est le premier réseau de recherche 
-          et d&apos;innovation du Cameroun dédié aux technologies émergentes.
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br pt-16 from-gray-50 to-white">
+      <PageHeader
+        badge={{ icon: Info, text: "À propos de C5IN" }}
+        title="Innovation & Excellence"
+        subtitle="Réseau Camerounais d'Innovation"
+        description="Le Cameroon Cloud-Edge-IoT Innovation Network est le premier réseau de recherche et d'innovation du Cameroun dédié aux technologies émergentes."
+        stats={[
+          { value: "2024", label: "Fondation", color: "blue" },
+          { value: "5", label: "Domaines", color: "green" },
+          { value: "15+", label: "Membres", color: "purple" },
+          { value: "3", label: "Partenaires", color: "orange" }
+        ]}
+      />
+      
+      <div className="container mx-auto px-4 pt-16 pb-12 max-w-6xl">
 
       {/* Qui Sommes-Nous Section */}
       <section className="mb-16">
@@ -285,6 +290,7 @@ export default function AboutPage() {
           </CardContent>
         </Card>
       </section>
+      </div>
     </div>
   )
 }

@@ -9,9 +9,6 @@ import { fr } from 'date-fns/locale'
 import { 
   BookOpen, 
   Users, 
-  Search, 
-  Filter, 
-  X, 
   Download, 
   ExternalLink,
   Calendar,
@@ -23,9 +20,9 @@ import {
 import { PublicationContent, PaginatedResult } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { ContentFilters } from '@/components/ui/content-filters'
 
 interface PublicationsListingProps {
   initialData: PaginatedResult<PublicationContent>
@@ -35,7 +32,6 @@ interface PublicationsListingProps {
   searchParams: {
     page?: string
     tag?: string
-    search?: string
     type?: string
     year?: string
     sort?: string
@@ -291,13 +287,11 @@ export default function PublicationsListing({
 }: PublicationsListingProps) {
   const router = useRouter()
   const urlSearchParams = useSearchParams()
-  const [searchQuery, setSearchQuery] = useState(searchParams.search || '')
   const [selectedTag, setSelectedTag] = useState(searchParams.tag || '')
   const [selectedType, setSelectedType] = useState(searchParams.type || '')
   const [selectedYear, setSelectedYear] = useState(searchParams.year || '')
   const [sortField, setSortField] = useState(searchParams.sort || 'date')
   const [sortOrder, setSortOrder] = useState(searchParams.order || 'desc')
-  const [showFilters, setShowFilters] = useState(false)
 
   const updateURL = (params: Record<string, string | undefined>) => {
     const newParams = new URLSearchParams(urlSearchParams.toString())
@@ -311,19 +305,14 @@ export default function PublicationsListing({
     })
     
     // Reset page when filtering or sorting
-    if (params.tag !== undefined || params.search !== undefined || 
-        params.type !== undefined || params.year !== undefined ||
-        params.sort !== undefined || params.order !== undefined) {
+    if (params.tag !== undefined || params.type !== undefined || 
+        params.year !== undefined || params.sort !== undefined || 
+        params.order !== undefined) {
       newParams.delete('page')
     }
     
     const queryString = newParams.toString()
     router.push(`/publications${queryString ? `?${queryString}` : ''}` as Route)
-  }
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    updateURL({ search: searchQuery || undefined })
   }
 
   const handleTagFilter = (tag: string) => {
@@ -332,13 +321,15 @@ export default function PublicationsListing({
   }
 
   const handleTypeFilter = (type: string) => {
-    setSelectedType(type === selectedType ? '' : type)
-    updateURL({ type: type === selectedType ? undefined : type })
+    const newType = type === 'all' ? '' : type
+    setSelectedType(newType)
+    updateURL({ type: newType || undefined })
   }
 
   const handleYearFilter = (year: string) => {
-    setSelectedYear(year === selectedYear ? '' : year)
-    updateURL({ year: year === selectedYear ? undefined : year })
+    const newYear = year === 'all' ? '' : year
+    setSelectedYear(newYear)
+    updateURL({ year: newYear || undefined })
   }
 
   const handleSort = (field: string) => {
@@ -349,7 +340,6 @@ export default function PublicationsListing({
   }
 
   const clearFilters = () => {
-    setSearchQuery('')
     setSelectedTag('')
     setSelectedType('')
     setSelectedYear('')
@@ -358,11 +348,9 @@ export default function PublicationsListing({
     router.push('/publications' as Route)
   }
 
-  const hasActiveFilters = searchParams.search || searchParams.tag || 
-                          searchParams.type || searchParams.year
+  const hasActiveFilters = searchParams.tag || searchParams.type || searchParams.year
 
   const baseUrl = `/publications?${new URLSearchParams({
-    ...(searchParams.search && { search: searchParams.search }),
     ...(searchParams.tag && { tag: searchParams.tag }),
     ...(searchParams.type && { type: searchParams.type }),
     ...(searchParams.year && { year: searchParams.year }),
@@ -372,127 +360,78 @@ export default function PublicationsListing({
 
   return (
     <div className="space-y-6">
-      {/* Search and Filters */}
-      <div className="bg-gray-50 rounded-lg p-6">
-        <div className="flex flex-col lg:flex-row gap-4">
-          {/* Search */}
-          <form onSubmit={handleSearch} className="flex-1">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                type="text"
-                placeholder="Rechercher une publication..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </form>
+      <ContentFilters
+        availableTags={allTags}
+        selectedTag={selectedTag}
+        onTagFilter={handleTagFilter}
+        onClearFilters={clearFilters}
+        hasActiveFilters={Boolean(selectedTag || selectedType || selectedYear)}
+      />
+
+      {/* Additional Filters and Sort */}
+      <div className="flex flex-wrap gap-4 items-center justify-center">
+        <Select value={selectedType || 'all'} onValueChange={handleTypeFilter}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Type de publication" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous les types</SelectItem>
+            {publicationTypes.map((type) => (
+              <SelectItem key={type} value={type}>
+                {publicationTypeLabels[type]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedYear || 'all'} onValueChange={handleYearFilter}>
+          <SelectTrigger className="w-[120px]">
+            <SelectValue placeholder="Année" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Toutes</SelectItem>
+            {years.map((year) => (
+              <SelectItem key={year} value={year.toString()}>
+                {year}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        
+        <div className="flex gap-2">
+          <Select value={sortField} onValueChange={(value) => handleSort(value)}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Trier par" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="date">Date</SelectItem>
+              <SelectItem value="title">Titre</SelectItem>
+              <SelectItem value="type">Type</SelectItem>
+            </SelectContent>
+          </Select>
           
-          {/* Sort Options */}
-          <div className="flex gap-2">
-            <Select value={sortField} onValueChange={(value) => handleSort(value)}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Trier par" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="date">Date</SelectItem>
-                <SelectItem value="title">Titre</SelectItem>
-                <SelectItem value="type">Type</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleSort(sortField)}
-              className="px-3"
-            >
-              {sortOrder === 'desc' ? <SortDesc className="w-4 h-4" /> : <SortAsc className="w-4 h-4" />}
-            </Button>
-          </div>
-          
-          {/* Filter Toggle */}
           <Button
             variant="outline"
-            onClick={() => setShowFilters(!showFilters)}
-            className="lg:w-auto"
+            size="sm"
+            onClick={() => handleSort(sortField)}
+            className="px-3"
           >
-            <Filter className="w-4 h-4 mr-2" />
-            Filtres
-            {hasActiveFilters && (
-              <Badge variant="secondary" className="ml-2">
-                {(searchParams.search ? 1 : 0) + (searchParams.tag ? 1 : 0) + 
-                 (searchParams.type ? 1 : 0) + (searchParams.year ? 1 : 0)}
-              </Badge>
-            )}
+            {sortOrder === 'desc' ? <SortDesc className="w-4 h-4" /> : <SortAsc className="w-4 h-4" />}
           </Button>
-          
-          {hasActiveFilters && (
-            <Button variant="ghost" onClick={clearFilters}>
-              <X className="w-4 h-4 mr-2" />
-              Effacer
-            </Button>
-          )}
         </div>
         
-        {/* Filters Panel */}
-        {showFilters && (
-          <div className="mt-4 pt-4 border-t space-y-4">
-            {/* Type Filter */}
-            <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-3">Type de publication</h3>
-              <div className="flex flex-wrap gap-2">
-                {publicationTypes.map((type) => (
-                  <Button
-                    key={type}
-                    variant={selectedType === type ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handleTypeFilter(type)}
-                    className="text-xs"
-                  >
-                    {publicationTypeLabels[type]}
-                  </Button>
-                ))}
-              </div>
-            </div>
-            
-            {/* Year Filter */}
-            <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-3">Année</h3>
-              <div className="flex flex-wrap gap-2">
-                {years.map((year) => (
-                  <Button
-                    key={year}
-                    variant={selectedYear === year.toString() ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handleYearFilter(year.toString())}
-                    className="text-xs"
-                  >
-                    {year}
-                  </Button>
-                ))}
-              </div>
-            </div>
-            
-            {/* Tag Filter */}
-            <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-3">Filtrer par tag</h3>
-              <div className="flex flex-wrap gap-2">
-                {allTags.map((tag) => (
-                  <Button
-                    key={tag}
-                    variant={selectedTag === tag ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handleTagFilter(tag)}
-                    className="text-xs"
-                  >
-                    {tag}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
+        {(selectedType || selectedYear) && (
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              setSelectedType('')
+              setSelectedYear('')
+              updateURL({ type: undefined, year: undefined })
+            }}
+            className="h-10"
+          >
+            Effacer filtres additionnels
+          </Button>
         )}
       </div>
 

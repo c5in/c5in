@@ -1,25 +1,24 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { BlogContent } from '@/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { PageHeader } from '@/components/ui/page-header'
+import { ContentFilters } from '@/components/ui/content-filters'
 //import { Separator } from '@/components/ui/separator'
 import { 
-  Search, 
   Calendar, 
   User, 
-  Tag, 
+  //Tag, 
   ChevronLeft, 
   ChevronRight,
-  Filter,
+  //Filter,
   X,
   Clock,
-  //Eye,
   TrendingUp,
   Sparkles,
   Grid3X3,
@@ -42,42 +41,14 @@ export function BlogListing({
   totalPages,
   totalPosts,
   selectedTag,
-  searchQuery,
+  //searchQuery,
   availableTags
 }: BlogListingProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery || '')
-  const [showFilters, setShowFilters] = useState(false)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [isSearching, setIsSearching] = useState(false)
 
-  const handleSearch = useCallback(() => {
-    setIsSearching(true)
-    const params = new URLSearchParams(searchParams.toString())
-    
-    if (localSearchQuery.trim()) {
-      params.set('search', localSearchQuery.trim())
-    } else {
-      params.delete('search')
-    }
-    
-    params.delete('page')
-    
-    router.push(`/blog?${params.toString()}`)
-    setTimeout(() => setIsSearching(false), 500)
-  }, [localSearchQuery, searchParams, router])
 
-  // Auto-search with debounce
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (localSearchQuery !== (searchQuery || '')) {
-        handleSearch()
-      }
-    }, 500)
-
-    return () => clearTimeout(timeoutId)
-  }, [localSearchQuery, searchQuery, handleSearch])
 
   const handleTagFilter = (tag: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -107,7 +78,6 @@ export function BlogListing({
   }
 
   const clearFilters = () => {
-    setLocalSearchQuery('')
     router.push('/blog')
   }
 
@@ -125,173 +95,56 @@ export function BlogListing({
     return Math.ceil(wordCount / wordsPerMinute)
   }
 
-  const hasActiveFilters = selectedTag || searchQuery
+  const hasActiveFilters = Boolean(selectedTag)
   const featuredPost = posts[0] // First post as featured
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/5 to-transparent" />
-        
-        <div className="relative container mx-auto px-4 pt-16 pb-12">
-          {/* Header */}
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <Sparkles className="h-4 w-4" />
-              Blog C5IN
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent leading-tight">
-              Expertise & Insights
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed font-light">
-              Découvrez les dernières actualités et analyses sur le Cloud Computing, Edge Computing, 
-              IoT, Green Computing et Federated Learning par les experts du C5IN.
-            </p>
-          </div>
-
-          {/* Search Bar */}
-          <div className="max-w-2xl mx-auto mb-8">
-            <div className="relative">
-              <Search className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors ${isSearching ? 'text-blue-600 animate-pulse' : 'text-gray-400'}`} />
-              <Input
-                type="text"
-                placeholder="Rechercher dans nos articles..."
-                value={localSearchQuery}
-                onChange={(e) => setLocalSearchQuery(e.target.value)}
-                className="pl-12 pr-4 h-14 text-lg bg-white/80 backdrop-blur-sm border-0 shadow-lg focus:shadow-xl transition-all duration-300 rounded-2xl"
-              />
-              {localSearchQuery && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setLocalSearchQuery('')}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 rounded-full hover:bg-gray-100"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {/* Stats & Actions */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
-            <div className="flex items-center gap-8">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">{totalPosts}</div>
-                <div className="text-sm text-gray-600">Articles</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">{availableTags.length}</div>
-                <div className="text-sm text-gray-600">Sujets</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">5</div>
-                <div className="text-sm text-gray-600">Experts</div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              {/* View Mode Toggle */}
-              <div className="flex items-center gap-1 bg-white rounded-lg p-1 shadow-sm">
-                <Button
-                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('grid')}
-                  className="rounded-md"
-                >
-                  <Grid3X3 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('list')}
-                  className="rounded-md"
-                >
-                  <List className="h-4 w-4" />
-                </Button>
-              </div>
-
-              {/* Filters Toggle */}
+    <div className="min-h-screen bg-gradient-to-br pt-16 from-gray-50 to-white">
+      
+        <PageHeader
+          badge={{ icon: Sparkles, text: "Blog C5IN" }}
+          title="Expertise & Insights"
+          subtitle="Analyses et Découvertes"
+          description="Découvrez les dernières actualités et analyses sur le Cloud Computing, Edge Computing, IoT, Green Computing et Federated Learning par les experts du C5IN."
+          stats={[
+            { value: totalPosts, label: "Articles", color: "blue" },
+            { value: availableTags.length, label: "Sujets", color: "green" },
+            { value: "5", label: "Experts", color: "purple" },
+            { value: "12", label: "Domaines", color: "orange" }
+          ]}
+        >
+          <div className="flex items-center justify-end mr-16 gap-4">
+            {/* View Mode Toggle */}
+            <div className="flex items-center gap-1 bg-white rounded-lg p-1 shadow-sm">
               <Button
-                variant="outline"
-                onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 bg-white shadow-sm"
+                variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+                className="rounded-md"
               >
-                <Filter className="h-4 w-4" />
-                Filtres
-                {hasActiveFilters && (
-                  <Badge className="ml-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
-                    {(selectedTag ? 1 : 0) + (searchQuery ? 1 : 0)}
-                  </Badge>
-                )}
+                <Grid3X3 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+                className="rounded-md"
+              >
+                <List className="h-4 w-4" />
               </Button>
             </div>
           </div>
-        </div>
-      </div>
+        </PageHeader>
 
-      <div className="container mx-auto px-4">
-        {/* Filters Panel */}
-        {showFilters && (
-          <div className="bg-white rounded-2xl shadow-lg border p-6 mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <Filter className="h-5 w-5" />
-                Filtres
-              </h3>
-              {hasActiveFilters && (
-                <Button variant="outline" size="sm" onClick={clearFilters}>
-                  Tout effacer
-                </Button>
-              )}
-            </div>
+        <div className="container mx-auto px-4  pb-12">
 
-            {/* Active Filters */}
-            {hasActiveFilters && (
-              <div className="mb-6">
-                <div className="text-sm font-medium text-gray-700 mb-3">Filtres actifs :</div>
-                <div className="flex flex-wrap gap-2">
-                  {searchQuery && (
-                    <Badge variant="default" className="flex items-center gap-2">
-                      <Search className="h-3 w-3" />
-                      &quot;{searchQuery}&quot;
-                      <X className="h-3 w-3 cursor-pointer" onClick={() => {
-                        setLocalSearchQuery('')
-                        handleSearch()
-                      }} />
-                    </Badge>
-                  )}
-                  {selectedTag && (
-                    <Badge variant="default" className="flex items-center gap-2">
-                      <Tag className="h-3 w-3" />
-                      {selectedTag}
-                      <X className="h-3 w-3 cursor-pointer" onClick={() => handleTagFilter(selectedTag)} />
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Tag Filters */}
-            <div>
-              <div className="text-sm font-medium text-gray-700 mb-3">Filtrer par sujet :</div>
-              <div className="flex flex-wrap gap-2">
-                {availableTags.map((tag) => (
-                  <Button
-                    key={tag}
-                    variant={selectedTag === tag ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handleTagFilter(tag)}
-                    className="transition-all hover:scale-105"
-                  >
-                    {tag}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+        <ContentFilters
+          availableTags={availableTags}
+          selectedTag={selectedTag}
+          onTagFilter={handleTagFilter}
+          onClearFilters={clearFilters}
+          hasActiveFilters={hasActiveFilters}
+        />
 
         {/* Featured Post */}
         {!hasActiveFilters && featuredPost && (
@@ -525,14 +378,14 @@ export function BlogListing({
           /* Empty State */
           <div className="text-center py-20">
             <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center">
-              <Search className="h-12 w-12 text-gray-400" />
+              <Sparkles className="h-12 w-12 text-gray-400" />
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
               Aucun article trouvé
             </h3>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
               {hasActiveFilters 
-                ? "Aucun article ne correspond à vos critères de recherche. Essayez d'autres mots-clés ou supprimez les filtres."
+                ? "Aucun article ne correspond aux filtres sélectionnés. Essayez d'autres sujets ou supprimez les filtres."
                 : "Aucun article n'est disponible pour le moment. Revenez bientôt pour découvrir nos dernières publications."
               }
             </p>

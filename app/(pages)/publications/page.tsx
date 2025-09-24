@@ -5,6 +5,8 @@ import { PublicationContent, PaginatedResult } from '@/types'
 import { generateSEOMetadata } from '@/components/seo'
 import PublicationsListing from './publications-listing'
 import { Card, CardContent } from '@/components/ui/card'
+import { PageHeader } from '@/components/ui/page-header'
+import { BookOpen } from 'lucide-react'
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Publications',
@@ -111,25 +113,31 @@ export default async function PublicationsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Publications</h1>
-        <p className="text-lg text-gray-600 max-w-3xl">
-          Découvrez les publications scientifiques de C5IN : articles de journaux, 
-          actes de conférences, thèses et rapports de recherche dans les domaines du 
-          Cloud Computing, Edge Computing, IoT, Green Computing et Federated Learning.
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br pt-16 from-gray-50 to-white">
+      <PageHeader
+        badge={{ icon: BookOpen, text: "Recherche C5IN" }}
+        title="Publications Scientifiques"
+        subtitle="Recherche & Innovation"
+        description="Découvrez les publications scientifiques de C5IN : articles de journaux, actes de conférences, thèses et rapports de recherche dans les domaines du Cloud Computing, Edge Computing, IoT, Green Computing et Federated Learning."
+        stats={[
+          { value: result.pagination.totalItems, label: "Publications", color: "blue" },
+          { value: publicationTypes.length, label: "Types", color: "green" },
+          { value: allTags.length, label: "Sujets", color: "purple" },
+          { value: years.length, label: "Années", color: "orange" }
+        ]}
+      />
 
-      <Suspense fallback={<PublicationsLoadingSkeleton />}>
-        <PublicationsListing 
-          initialData={result}
-          allTags={allTags}
-          publicationTypes={publicationTypes}
-          years={years}
-          searchParams={{}}
-        />
-      </Suspense>
+      <div className="container mx-auto px-4  pb-12">
+        <Suspense fallback={<PublicationsLoadingSkeleton />}>
+          <PublicationsListing 
+            initialData={result}
+            allTags={allTags}
+            publicationTypes={publicationTypes}
+            years={years}
+            searchParams={{}}
+          />
+        </Suspense>
+      </div>
     </div>
   )
 }
