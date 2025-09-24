@@ -1,7 +1,7 @@
 import { SiteConfig, ResearchDomain } from '@/types'
 
 export const siteConfig: SiteConfig = {
-  name: "C5IN - Cameroon Cloud-Edge-IoT Innovation Network",
+  name: "C5IN",
   description: "Réseau d'innovation camerounais spécialisé dans les technologies Cloud, Edge Computing et IoT",
   url: "https://c5in.org",
   logo: "/images/logo.png",
@@ -49,6 +49,10 @@ export const siteConfig: SiteConfig = {
     {
       label: "Publications",
       href: "/publications"
+    },
+    {
+      label: "Partenaires",
+      href: "/partners"
     },
     {
       label: "Contact",

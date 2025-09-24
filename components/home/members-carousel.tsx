@@ -9,13 +9,14 @@ import {
   CarouselPrevious 
 } from '@/components/ui/carousel'
 import { Mail, Linkedin, Twitter, Github, Users } from 'lucide-react'
-import Image from 'next/image'
+//import Image from 'next/image'
 import Link from 'next/link'
 import { Member } from '@/types'
 import { useEffect, useState } from 'react'
 import Autoplay from 'embla-carousel-autoplay'
 import type { CarouselApi } from '@/components/ui/carousel'
 import { Route } from 'next'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 interface MembersCarouselProps {
   members: Member[]
@@ -34,6 +35,15 @@ export function MembersCarousel({ members, autoPlay = true, showDots = true }: M
   const [api, setApi] = useState<CarouselApi>()
   const [current, setCurrent] = useState(0)
   const [count, setCount] = useState(0)
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(part => part.charAt(0))
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
+  }
 
   useEffect(() => {
     if (!api) return
@@ -79,20 +89,18 @@ export function MembersCarousel({ members, autoPlay = true, showDots = true }: M
                     <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white border-slate-200 h-full">
                       <CardContent className="p-6 text-center h-full flex flex-col">
                         {/* Member Photo */}
-                        <div className="relative w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden bg-slate-100">
-                          {member.photo ? (
-                            <Image
-                              src={member.photo}
+                        
+                          <Avatar className="w-24 h-24 mx-auto ring-2 ring-gray-100 group-hover:ring-blue-200 transition-all">
+                            <AvatarImage 
+                              src={member.photo} 
                               alt={member.name}
-                              fill
-                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                              className="object-cover"
                             />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-slate-200">
-                              <Users className="w-8 h-8 text-slate-400" />
-                            </div>
-                          )}
-                        </div>
+                            <AvatarFallback className="text-lg font-semibold bg-blue-100 text-blue-700">
+                              {getInitials(member.name)}
+                            </AvatarFallback>
+                          </Avatar>
+                        
                         
                         {/* Member Info */}
                         <div className="flex-grow">

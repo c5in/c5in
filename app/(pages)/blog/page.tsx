@@ -2,16 +2,14 @@ import { Metadata } from 'next'
 import { Suspense } from 'react'
 import { BlogListing } from './blog-listing'
 import { enhancedBlogLoader } from '@/lib/content'
+import { generateSEOMetadata } from '@/components/seo'
 
-export const metadata: Metadata = {
-  title: 'Blog - C5IN',
+export const metadata: Metadata = generateSEOMetadata({
+  title: 'Blog',
   description: 'Découvrez les dernières actualités et analyses sur le Cloud Computing, Edge Computing, IoT, Green Computing et Federated Learning par les experts du C5IN.',
-  openGraph: {
-    title: 'Blog - C5IN',
-    description: 'Découvrez les dernières actualités et analyses sur le Cloud Computing, Edge Computing, IoT, Green Computing et Federated Learning par les experts du C5IN.',
-    type: 'website',
-  },
-}
+  url: '/blog',
+  tags: ['blog', 'actualités', 'cloud computing', 'edge computing', 'iot', 'green computing', 'federated learning'],
+})
 
 export default async function BlogPage() {
   const itemsPerPage = 9

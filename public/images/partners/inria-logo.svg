@@ -1,0 +1,6 @@
+<svg width="120" height="60" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="60" rx="8" fill="#e11d48"/>
+  <text x="60" y="25" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">INRIA</text>
+  <text x="60" y="40" text-anchor="middle" fill="#fecaca" font-family="Arial, sans-serif" font-size="8">Institut National</text>
+  <text x="60" y="50" text-anchor="middle" fill="#fecaca" font-family="Arial, sans-serif" font-size="8">de Recherche</text>
+</svg>

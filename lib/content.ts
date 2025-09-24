@@ -84,6 +84,21 @@ export const publicationContentSchema = baseContentSchema.extend({
   type: z.enum(['journal', 'conference', 'workshop', 'thesis']).default('journal'),
 })
 
+export const partnerContentSchema = z.object({
+  id: z.string().min(1, 'ID is required'),
+  slug: z.string().min(1, 'Slug is required'),
+  name: z.string().min(1, 'Name is required'),
+  logo: z.string().min(1, 'Logo is required'),
+  website: z.string().url().optional(),
+  description: z.string().min(1, 'Description is required'),
+  type: z.enum(['academic', 'industry', 'research', 'government']).default('industry'),
+  featured: z.boolean().default(false),
+  content: z.string().optional(),
+  excerpt: z.string().optional(),
+  tags: z.array(z.string()).default([]),
+  date: z.string().or(z.date()).optional(),
+})
+
 // Markdown Parser Implementation
 export class MarkdownParserImpl implements MarkdownParser {
   private processor = unified()
@@ -323,6 +338,7 @@ export const eventsLoader = new MarkdownContentLoader('events', eventContentSche
 export const blogLoader = new MarkdownContentLoader('blog', blogContentSchema)
 export const membersLoader = new MarkdownContentLoader('members', memberContentSchema)
 export const publicationsLoader = new MarkdownContentLoader('publications', publicationContentSchema)
+export const partnersLoader = new MarkdownContentLoader('partners', partnerContentSchema)
 
 // Export parser instance for direct use
 export const markdownParser = new MarkdownParserImpl()
@@ -580,6 +596,7 @@ export const enhancedEventsLoader = new EnhancedContentLoader('events', eventCon
 export const enhancedBlogLoader = new EnhancedContentLoader('blog', blogContentSchema)
 export const enhancedMembersLoader = new EnhancedContentLoader('members', memberContentSchema)
 export const enhancedPublicationsLoader = new EnhancedContentLoader('publications', publicationContentSchema)
+export const enhancedPartnersLoader = new EnhancedContentLoader('partners', partnerContentSchema)
 
 // Convenience functions for homepage
 export async function getLatestEvents(limit: number = 4) {
@@ -642,7 +659,37 @@ export async function getFeaturedMembers() {
 }
 
 export async function getPartners() {
-  // For now, return empty array since we don't have partner content yet
-  // This will be populated when partner content is added
-  return []
+  const partners = await partnersLoader.getAll()
+  return partners.map(partner => {
+    const partnerWithSlug = partner as typeof partner & { slug: string; excerpt: string }
+    return {
+      ...partnerWithSlug,
+      id: partnerWithSlug.slug,
+      slug: partnerWithSlug.slug
+    }
+  })
+}
+
+export async function getFeaturedPartners(limit: number = 6) {
+  const featured = await partnersLoader.getFeatured(limit)
+  if (featured.length === 0) {
+    // If no featured partners, get all partners
+    const all = await partnersLoader.getAll()
+    return all.slice(0, limit).map(partner => {
+      const partnerWithSlug = partner as typeof partner & { slug: string; excerpt: string }
+      return {
+        ...partnerWithSlug,
+        id: partnerWithSlug.slug,
+        slug: partnerWithSlug.slug
+      }
+    })
+  }
+  return featured.map(partner => {
+    const partnerWithSlug = partner as typeof partner & { slug: string; excerpt: string }
+    return {
+      ...partnerWithSlug,
+      id: partnerWithSlug.slug,
+      slug: partnerWithSlug.slug
+    }
+  })
 }

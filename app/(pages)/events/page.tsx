@@ -2,18 +2,16 @@ import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { enhancedEventsLoader } from '@/lib/content'
 import { EventContent, PaginatedResult } from '@/types'
+import { generateSEOMetadata } from '@/components/seo'
 import EventsListing from './events-listing'
 import { Card, CardContent } from '@/components/ui/card'
 
-export const metadata: Metadata = {
-  title: 'Événements | C5IN',
+export const metadata: Metadata = generateSEOMetadata({
+  title: 'Événements',
   description: 'Découvrez tous les événements organisés par le Cameroon Cloud-Edge-IoT Innovation Network : workshops, conférences, séminaires et formations.',
-  openGraph: {
-    title: 'Événements | C5IN',
-    description: 'Découvrez tous les événements organisés par le Cameroon Cloud-Edge-IoT Innovation Network : workshops, conférences, séminaires et formations.',
-    type: 'website',
-  },
-}
+  url: '/events',
+  tags: ['événements', 'workshops', 'conférences', 'séminaires', 'formations', 'cloud computing'],
+})
 
 async function getEventsData() {
   const limit = 6

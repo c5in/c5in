@@ -2,18 +2,16 @@ import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { enhancedMembersLoader } from '@/lib/content'
 import { Member, PaginatedResult } from '@/types'
+import { generateSEOMetadata } from '@/components/seo'
 import MembersListing from './members-listing'
 import { Card, CardContent } from '@/components/ui/card'
 
-export const metadata: Metadata = {
-  title: 'Membres | C5IN',
+export const metadata: Metadata = generateSEOMetadata({
+  title: 'Membres',
   description: 'Découvrez l\'équipe d\'experts du Cameroon Cloud-Edge-IoT Innovation Network : chercheurs, professeurs et spécialistes dans les domaines du cloud computing, edge computing, IoT, green computing et federated learning.',
-  openGraph: {
-    title: 'Membres | C5IN',
-    description: 'Découvrez l\'équipe d\'experts du Cameroon Cloud-Edge-IoT Innovation Network : chercheurs, professeurs et spécialistes dans les domaines du cloud computing, edge computing, IoT, green computing et federated learning.',
-    type: 'website',
-  },
-}
+  url: '/members',
+  tags: ['membres', 'équipe', 'chercheurs', 'professeurs', 'experts', 'spécialistes'],
+})
 
 async function getMembersData() {
   const limit = 12

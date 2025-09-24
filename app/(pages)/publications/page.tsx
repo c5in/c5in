@@ -2,18 +2,16 @@ import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { enhancedPublicationsLoader } from '@/lib/content'
 import { PublicationContent, PaginatedResult } from '@/types'
+import { generateSEOMetadata } from '@/components/seo'
 import PublicationsListing from './publications-listing'
 import { Card, CardContent } from '@/components/ui/card'
 
-export const metadata: Metadata = {
-  title: 'Publications | C5IN',
+export const metadata: Metadata = generateSEOMetadata({
+  title: 'Publications',
   description: 'Découvrez les publications scientifiques du Cameroon Cloud-Edge-IoT Innovation Network : articles de journaux, actes de conférences, thèses et rapports de recherche.',
-  openGraph: {
-    title: 'Publications | C5IN',
-    description: 'Découvrez les publications scientifiques du Cameroon Cloud-Edge-IoT Innovation Network : articles de journaux, actes de conférences, thèses et rapports de recherche.',
-    type: 'website',
-  },
-}
+  url: '/publications',
+  tags: ['publications', 'recherche', 'articles', 'conférences', 'thèses'],
+})
 
 async function getPublicationsData() {
   const limit = 9

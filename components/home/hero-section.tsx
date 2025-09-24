@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { ChevronDown, Zap, ArrowRight, Play, Sparkles, Code, Brain, Globe, Rocket } from 'lucide-react'
+import {  Zap, ArrowRight, Play, Sparkles, Code, Brain, Globe, Rocket } from 'lucide-react'
 
 interface HeroProps {
   title: string

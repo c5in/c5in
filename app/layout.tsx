@@ -39,6 +39,9 @@ export const metadata: Metadata = {
     },
   ],
   creator: "C5IN",
+  alternates: {
+    canonical: siteConfig.url,
+  },
   openGraph: {
     type: "website",
     locale: "fr_FR",

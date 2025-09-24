@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { BlogContent } from '@/types'
@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
+//import { Separator } from '@/components/ui/separator'
 import { 
   Search, 
   Calendar, 
@@ -19,7 +19,7 @@ import {
   Filter,
   X,
   Clock,
-  Eye,
+  //Eye,
   TrendingUp,
   Sparkles,
   Grid3X3,
@@ -52,18 +52,7 @@ export function BlogListing({
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [isSearching, setIsSearching] = useState(false)
 
-  // Auto-search with debounce
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (localSearchQuery !== (searchQuery || '')) {
-        handleSearch()
-      }
-    }, 500)
-
-    return () => clearTimeout(timeoutId)
-  }, [localSearchQuery])
-
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     setIsSearching(true)
     const params = new URLSearchParams(searchParams.toString())
     
@@ -77,7 +66,18 @@ export function BlogListing({
     
     router.push(`/blog?${params.toString()}`)
     setTimeout(() => setIsSearching(false), 500)
-  }
+  }, [localSearchQuery, searchParams, router])
+
+  // Auto-search with debounce
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (localSearchQuery !== (searchQuery || '')) {
+        handleSearch()
+      }
+    }, 500)
+
+    return () => clearTimeout(timeoutId)
+  }, [localSearchQuery, searchQuery, handleSearch])
 
   const handleTagFilter = (tag: string) => {
     const params = new URLSearchParams(searchParams.toString())

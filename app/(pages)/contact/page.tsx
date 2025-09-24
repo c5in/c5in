@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { ContactForm } from './contact-form'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { siteConfig } from '@/lib/config'
+import { generateSEOMetadata } from '@/components/seo'
 import { 
   MapPin, 
   Phone, 
@@ -14,10 +15,12 @@ import {
   ExternalLink
 } from 'lucide-react'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEOMetadata({
   title: 'Contact',
-  description: 'Contactez C5IN pour vos questions, collaborations ou pour rejoindre notre réseau d\'innovation.',
-}
+  description: 'Contactez C5IN pour vos questions, collaborations ou pour rejoindre notre réseau d\'innovation. Adresse, téléphone, email et formulaire de contact.',
+  url: '/contact',
+  tags: ['contact', 'collaboration', 'partenariat', 'adresse', 'téléphone'],
+})
 
 const socialIcons = {
   twitter: Twitter,

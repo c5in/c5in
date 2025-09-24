@@ -2,12 +2,15 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { researchDomains } from '@/lib/config'
+import { generateSEOMetadata } from '@/components/seo'
 import { Cloud, Cpu, Wifi, Leaf, Brain, Users, Target, Lightbulb, Calendar } from 'lucide-react'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEOMetadata({
   title: 'À propos',
-  description: 'Découvrez C5IN, le réseau d\'innovation camerounais spécialisé dans les technologies Cloud, Edge Computing et IoT.',
-}
+  description: 'Découvrez C5IN, le réseau d\'innovation camerounais spécialisé dans les technologies Cloud, Edge Computing et IoT. Notre mission, vision et domaines d\'activité.',
+  url: '/about',
+  tags: ['à propos', 'mission', 'vision', 'innovation', 'cameroun', 'recherche'],
+})
 
 const iconMap = {
   cloud: Cloud,

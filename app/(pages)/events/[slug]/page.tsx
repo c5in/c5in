@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { enhancedEventsLoader } from '@/lib/content'
 import { EventContent } from '@/types'
+import { generateContentSEOMetadata, StructuredData, generateEventStructuredData } from '@/components/seo'
 import EventDetail from './event-detail'
 
 interface EventPageProps {
@@ -56,25 +57,11 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
     }
   }
 
-  const eventDate = new Date(event.date)
-  const description = event.excerpt || event.description
-
-  return {
-    title: `${event.title} | C5IN`,
-    description: description.substring(0, 160),
-    openGraph: {
-      title: `${event.title} | C5IN`,
-      description: description.substring(0, 160),
-      type: 'article',
-      publishedTime: eventDate.toISOString(),
-      tags: event.tags,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${event.title} | C5IN`,
-      description: description.substring(0, 160),
-    },
-  }
+  return generateContentSEOMetadata({
+    content: event,
+    type: 'event',
+    url: `/events/${event.slug}`,
+  })
 }
 
 export async function generateStaticParams() {
@@ -97,11 +84,17 @@ export default async function EventPage({ params }: EventPageProps) {
     notFound()
   }
 
+  // Generate structured data
+  const structuredData = generateEventStructuredData(event as EventContent, `/events/${event.slug}`)
+
   return (
-    <EventDetail 
-      event={event as EventContent}
-      relatedEvents={relatedEvents as EventContent[]}
-      contentHtml={contentHtml}
-    />
+    <>
+      <StructuredData data={structuredData} />
+      <EventDetail 
+        event={event as EventContent}
+        relatedEvents={relatedEvents as EventContent[]}
+        contentHtml={contentHtml}
+      />
+    </>
   )
 }

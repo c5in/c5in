@@ -4,8 +4,9 @@ import { EventsPreview } from '@/components/home/events-preview'
 import { BlogPreview } from '@/components/home/blog-preview'
 import { MembersCarousel } from '@/components/home/members-carousel'
 import { PartnersCarousel } from '@/components/home/partners-carousel'
+import { StructuredData, generateOrganizationStructuredData, generateWebsiteStructuredData, combineStructuredData } from '@/components/seo'
 import { researchDomains } from '@/lib/config'
-import { getLatestEvents, getLatestBlogPosts, getFeaturedMembers, getPartners } from '@/lib/content'
+import { getLatestEvents, getLatestBlogPosts, getFeaturedMembers, getFeaturedPartners } from '@/lib/content'
 
 export default async function Home() {
   // Load content data
@@ -13,36 +14,45 @@ export default async function Home() {
     getLatestEvents(4),
     getLatestBlogPosts(3),
     getFeaturedMembers(),
-    getPartners()
+    getFeaturedPartners(6)
   ])
 
+  // Generate structured data for homepage
+  const structuredData = combineStructuredData(
+    generateOrganizationStructuredData(),
+    generateWebsiteStructuredData()
+  )
+
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <HeroSection
-        title="C5IN"
-        subtitle="Cameroon Cloud-Edge-IoT Innovation Network"
-        description="Le premier réseau de recherche et d'innovation du Cameroun dédié aux technologies Cloud, Edge Computing et IoT. Nous développons des solutions innovantes pour accélérer la transformation numérique en Afrique centrale et former la prochaine génération de chercheurs et d'ingénieurs."
-        ctaButton={{
-          text: "Découvrir nos projets",
-          href: "/about"
-        }}
-      />
+    <>
+      <StructuredData data={structuredData} />
+      <main className="min-h-screen">
+        {/* Hero Section */}
+        <HeroSection
+          title="C5IN"
+          subtitle="Cameroon Cloud-Edge-IoT Innovation Network"
+          description="Le premier réseau de recherche et d'innovation du Cameroun dédié aux technologies Cloud, Edge Computing et IoT. Nous développons des solutions innovantes pour accélérer la transformation numérique en Afrique centrale et former la prochaine génération de chercheurs et d'ingénieurs."
+          ctaButton={{
+            text: "Découvrir nos projets",
+            href: "/about"
+          }}
+        />
 
-      {/* Research Domains Section */}
-      <ResearchDomains domains={researchDomains} />
+        {/* Research Domains Section */}
+        <ResearchDomains domains={researchDomains} />
 
-      {/* Events Preview Section */}
-      <EventsPreview events={events} maxItems={4} />
+        {/* Events Preview Section */}
+        <EventsPreview events={events} maxItems={4} />
 
-      {/* Blog Preview Section */}
-      <BlogPreview posts={blogPosts} maxItems={3} />
+        {/* Blog Preview Section */}
+        <BlogPreview posts={blogPosts} maxItems={3} />
 
-      {/* Members Carousel Section */}
-      <MembersCarousel members={members} autoPlay={true} showDots={true} />
+        {/* Members Carousel Section */}
+        <MembersCarousel members={members} autoPlay={true} showDots={true} />
 
-      {/* Partners Carousel Section */}
-      <PartnersCarousel partners={partners} autoPlay={true} />
-    </main>
+        {/* Partners Carousel Section */}
+        <PartnersCarousel partners={partners} autoPlay={true} />
+      </main>
+    </>
   );
 }

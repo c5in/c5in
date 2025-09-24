@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { BlogDetail } from './blog-detail'
 import { enhancedBlogLoader } from '@/lib/content'
+import { generateContentSEOMetadata, StructuredData, generateArticleStructuredData } from '@/components/seo'
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -21,33 +22,11 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       }
     }
 
-    return {
-      title: `${post.title} - C5IN Blog`,
-      description: post.excerpt,
-      authors: [{ name: post.author }],
-      openGraph: {
-        title: post.title,
-        description: post.excerpt,
-        type: 'article',
-        publishedTime: new Date(post.date).toISOString(),
-        authors: [post.author],
-        tags: post.tags,
-        images: post.coverImage ? [
-          {
-            url: post.coverImage,
-            width: 1200,
-            height: 630,
-            alt: post.title,
-          }
-        ] : undefined,
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: post.title,
-        description: post.excerpt,
-        images: post.coverImage ? [post.coverImage] : undefined,
-      },
-    }
+    return generateContentSEOMetadata({
+      content: post,
+      type: 'blog',
+      url: `/blog/${post.slug}`,
+    })
   } catch (error) {
     console.error('Error generating metadata:', error)
     return {
@@ -84,12 +63,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     // Render content to HTML
     const contentHtml = await enhancedBlogLoader.renderContentToHtml(resolvedParams.slug)
 
+    // Generate structured data
+    const structuredData = generateArticleStructuredData(post, `/blog/${post.slug}`)
+
     return (
-      <BlogDetail
-        post={post}
-        contentHtml={contentHtml || ''}
-        relatedPosts={relatedPosts}
-      />
+      <>
+        <StructuredData data={structuredData} />
+        <BlogDetail
+          post={post}
+          contentHtml={contentHtml || ''}
+          relatedPosts={relatedPosts}
+        />
+      </>
     )
   } catch (error) {
     console.error('Error loading blog post:', error)

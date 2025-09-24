@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { enhancedMembersLoader, markdownParser } from '@/lib/content'
 import { Member } from '@/types'
+import { generateContentSEOMetadata } from '@/components/seo'
 import MemberDetail from './member-detail'
 
 interface MemberPageProps {
@@ -21,23 +22,11 @@ export async function generateMetadata({ params }: MemberPageProps): Promise<Met
     }
   }
 
-  return {
-    title: `${member.name} | C5IN`,
-    description: member.bio,
-    openGraph: {
-      title: `${member.name} | C5IN`,
-      description: member.bio,
-      type: 'profile',
-      images: member.photo ? [
-        {
-          url: member.photo,
-          width: 400,
-          height: 400,
-          alt: member.name,
-        }
-      ] : undefined,
-    },
-  }
+  return generateContentSEOMetadata({
+    content: member,
+    type: 'member',
+    url: `/members/${member.slug}`,
+  })
 }
 
 export async function generateStaticParams() {
