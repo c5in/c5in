@@ -107,13 +107,25 @@ export default async function MembersPage() {
         title="Nos Experts"
         subtitle="Chercheurs & Innovateurs"
         description="Découvrez l'équipe d'experts du C5IN : chercheurs, professeurs et spécialistes qui façonnent l'avenir des technologies cloud, edge computing, IoT, green computing et federated learning en Afrique."
-        stats={[
-          { value: result.pagination.totalItems, label: "Membres", color: "blue" },
-          { value: affiliations.length, label: "Institutions", color: "green" },
-          { value: "5", label: "Domaines", color: "purple" },
-          { value: "15+", label: "Publications", color: "orange" }
+        breadcrumb={[
+          { label: "Membres", icon: Users }
         ]}
-      />
+      >
+        <div className="flex flex-wrap gap-4 justify-center">
+          <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
+            {result.pagination.totalItems} Membres
+          </span>
+          <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
+            {affiliations.length} Institutions
+          </span>
+          <span className="bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium">
+            5 Domaines
+          </span>
+          <span className="bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-medium">
+            15+ Publications
+          </span>
+        </div>
+      </PageHeader>
 
       <div className="container mx-auto px-4  pb-12">
         <Suspense fallback={<MembersLoadingSkeleton />}>

@@ -3,6 +3,7 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/ui/page-header'
 import { 
   Building2, 
   ExternalLink, 
@@ -77,42 +78,26 @@ export function PartnersListing({ partnersByType, totalPartners }: PartnersListi
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/5 to-transparent" />
-        
-        <div className="relative container mx-auto px-4 pt-16 pb-12">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <Handshake className="h-4 w-4" />
-              Nos Partenaires
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent leading-tight">
-              Écosystème de Collaboration
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed font-light">
-              Découvrez les organisations qui nous accompagnent dans notre mission d&apos;innovation 
-              technologique au Cameroun et en Afrique centrale.
-            </p>
-          </div>
-
-          {/* Stats */}
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 mb-8">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900">{totalPartners}</div>
-              <div className="text-sm text-gray-600">Partenaires</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900">{Object.keys(partnersByType).length}</div>
-              <div className="text-sm text-gray-600">Secteurs</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900">5</div>
-              <div className="text-sm text-gray-600">Pays</div>
-            </div>
-          </div>
+      <PageHeader
+        badge={{ icon: Handshake, text: "Nos Partenaires" }}
+        title="Écosystème de Collaboration"
+        description="Découvrez les organisations qui nous accompagnent dans notre mission d'innovation technologique au Cameroun et en Afrique centrale."
+        breadcrumb={[
+          { label: "Partenaires", icon: Handshake }
+        ]}
+      >
+        <div className="flex flex-wrap gap-4 justify-center">
+          <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
+            {totalPartners} Partenaires
+          </span>
+          <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
+            {Object.keys(partnersByType).length} Secteurs
+          </span>
+          <span className="bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium">
+            5 Pays
+          </span>
         </div>
-      </div>
+      </PageHeader>
 
       <div className="container mx-auto px-4 pb-16">
         {hasPartners ? (

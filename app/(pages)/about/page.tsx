@@ -29,11 +29,8 @@ export default function AboutPage() {
         title="Innovation & Excellence"
         subtitle="Réseau Camerounais d'Innovation"
         description="Le Cameroon Cloud-Edge-IoT Innovation Network est le premier réseau de recherche et d'innovation du Cameroun dédié aux technologies émergentes."
-        stats={[
-          { value: "2024", label: "Fondation", color: "blue" },
-          { value: "5", label: "Domaines", color: "green" },
-          { value: "15+", label: "Membres", color: "purple" },
-          { value: "3", label: "Partenaires", color: "orange" }
+        breadcrumb={[
+          { label: "À propos", icon: Info }
         ]}
       />
       
@@ -197,7 +194,7 @@ export default function AboutPage() {
             {/* Timeline Item 2 */}
             <div className="relative flex items-center md:justify-center">
               <div className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-3 h-3 bg-blue-600 rounded-full border-4 border-white shadow"></div>
-              <div className="ml-12 md:ml-0 md:w-1/2 md:pl-8 md:ml-auto">
+              <div className="ml-12 md:ml-auto md:w-1/2 md:pl-8">
                 <Card className="bg-green-50 border-green-200">
                   <CardContent className="p-6">
                     <div className="text-sm font-semibold text-green-600 mb-2">2024 - Mars</div>
@@ -231,7 +228,7 @@ export default function AboutPage() {
             {/* Timeline Item 4 */}
             <div className="relative flex items-center md:justify-center">
               <div className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-3 h-3 bg-blue-600 rounded-full border-4 border-white shadow"></div>
-              <div className="ml-12 md:ml-0 md:w-1/2 md:pl-8 md:ml-auto">
+              <div className="ml-12 md:ml-auto md:w-1/2 md:pl-8">
                 <Card className="bg-orange-50 border-orange-200">
                   <CardContent className="p-6">
                     <div className="text-sm font-semibold text-orange-600 mb-2">2024 - Septembre</div>

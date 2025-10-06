@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { siteConfig } from '@/lib/config'
+import { getEnabledNavigation } from '@/lib/features'
 import { NavigationItem } from '@/types'
 import type { Route } from 'next'
 
@@ -14,7 +15,9 @@ interface HeaderProps {
   navigation?: NavigationItem[]
 }
 
-export function Header({ navigation = siteConfig.navigation }: HeaderProps) {
+export function Header({ navigation }: HeaderProps) {
+  // Utilise la navigation filtrée par défaut
+  const enabledNavigation = navigation || getEnabledNavigation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
@@ -60,7 +63,7 @@ export function Header({ navigation = siteConfig.navigation }: HeaderProps) {
     if (href === '/') {
       return pathname === '/'
     }
-    return pathname.startsWith(href)
+    return pathname ? pathname.startsWith(href) : false
   }
 
   return (
@@ -101,7 +104,7 @@ export function Header({ navigation = siteConfig.navigation }: HeaderProps) {
 
           {/* Desktop Navigation - Simplified active state */}
           <nav className="hidden md:flex md:items-center md:space-x-2">
-            {navigation.map((item, index) => (
+            {enabledNavigation.map((item, index) => (
               <Link
                 key={item.href}
                 href={item.href as Route}
@@ -167,13 +170,13 @@ export function Header({ navigation = siteConfig.navigation }: HeaderProps) {
           id="mobile-navigation"
         >
           <div className="space-y-2 pb-6 pt-4 border-t border-slate-200/50 bg-white rounded-b-2xl shadow-lg">
-            {navigation.map((item, index) => (
+            {enabledNavigation.map((item, index) => (
               <Link
                 key={item.href}
                 href={item.href as Route}
                 onClick={closeMobileMenu}
                 className={`
-                  group block px-4 py-4 text-base font-medium transition-all duration-300 
+                  group px-4 py-4 text-base font-medium transition-all duration-300
                   touch-manipulation min-h-[52px] flex items-center transform rounded-2xl mx-2 relative
                   hover:scale-[1.02] active:scale-[0.98]
                   ${isMobileMenuOpen 

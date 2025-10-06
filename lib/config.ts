@@ -28,37 +28,62 @@ export const siteConfig: SiteConfig = {
   navigation: [
     {
       label: "Accueil",
-      href: "/"
+      href: "/",
+      enabled: true
     },
     {
       label: "À propos",
-      href: "/about"
+      href: "/about",
+      enabled: true
     },
     {
       label: "Événements",
-      href: "/events"
+      href: "/events",
+      enabled: true  // Désactivé pour le moment
     },
     {
       label: "Blog",
-      href: "/blog"
+      href: "/blog",
+      enabled: false  // Désactivé pour le moment
     },
     {
       label: "Membres",
-      href: "/members"
+      href: "/members",
+      enabled: true
     },
     {
       label: "Publications",
-      href: "/publications"
+      href: "/publications",
+      enabled: false  // Désactivé pour le moment
     },
     {
       label: "Partenaires",
-      href: "/partners"
+      href: "/partners",
+      enabled: false  // Désactivé pour le moment
     },
     {
       label: "Contact",
-      href: "/contact"
+      href: "/contact",
+      enabled: true
     }
   ],
+  features: {
+    pages: {
+      about: true,
+      blog: false,        // Désactivé pour le moment
+      events: true,      // Désactivé pour le moment
+      members: true,
+      publications: false, // Désactivé pour le moment
+      partners: false,    // Désactivé pour le moment
+      contact: true
+    },
+    components: {
+      search: false,      // À développer plus tard
+      newsletter: false,  // À développer plus tard
+      analytics: false,   // À configurer plus tard
+      darkMode: false     // À développer plus tard
+    }
+  },
   theme: {
     colors: {
       primary: "#1e40af",

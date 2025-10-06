@@ -80,6 +80,7 @@ export interface Partner {
 export interface NavigationItem {
   label: string
   href: string
+  enabled?: boolean
   children?: NavigationItem[]
 }
 
@@ -88,6 +89,25 @@ export interface ContactInfo {
   phone: string
   email: string
   hours: string
+}
+
+// Features configuration
+export interface FeaturesConfig {
+  pages: {
+    about: boolean
+    blog: boolean
+    events: boolean
+    members: boolean
+    publications: boolean
+    partners: boolean
+    contact: boolean
+  }
+  components: {
+    search: boolean
+    newsletter: boolean
+    analytics: boolean
+    darkMode: boolean
+  }
 }
 
 // Site configuration
@@ -99,6 +119,7 @@ export interface SiteConfig {
   social: SocialLink[]
   contact: ContactInfo
   navigation: NavigationItem[]
+  features: FeaturesConfig
   theme: ThemeConfig
   seo: SEOConfig
 }

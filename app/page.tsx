@@ -1,12 +1,15 @@
 import { HeroSection } from '@/components/home/hero-section'
+import { AnnouncementBanner } from '@/components/home/announcement-banner'
 import { ResearchDomains } from '@/components/home/research-domains'
 import { EventsPreview } from '@/components/home/events-preview'
 import { BlogPreview } from '@/components/home/blog-preview'
 import { MembersCarousel } from '@/components/home/members-carousel'
 import { PartnersCarousel } from '@/components/home/partners-carousel'
+import { FeatureGate } from '@/hooks/usePageAccess'
 import { StructuredData, generateOrganizationStructuredData, generateWebsiteStructuredData, combineStructuredData } from '@/components/seo'
 import { researchDomains } from '@/lib/config'
 import { getLatestEvents, getLatestBlogPosts, getFeaturedMembers, getFeaturedPartners } from '@/lib/content'
+import { getActiveAnnouncement } from '@/lib/announcements'
 
 export default async function Home() {
   // Load content data
@@ -16,6 +19,9 @@ export default async function Home() {
     getFeaturedMembers(),
     getFeaturedPartners(6)
   ])
+
+  // Get active announcement
+  const activeAnnouncement = getActiveAnnouncement()
 
   // Generate structured data for homepage
   const structuredData = combineStructuredData(
@@ -38,20 +44,39 @@ export default async function Home() {
           }}
         />
 
+        {/* Announcement Banner */}
+        {activeAnnouncement && (
+          <AnnouncementBanner
+            type={activeAnnouncement.type}
+            title={activeAnnouncement.title}
+            message={activeAnnouncement.message}
+            actionText={activeAnnouncement.actionText}
+            actionUrl={activeAnnouncement.actionUrl}
+            date={activeAnnouncement.date}
+            dismissible={activeAnnouncement.dismissible}
+          />
+        )}
+
         {/* Research Domains Section */}
         <ResearchDomains domains={researchDomains} />
 
-        {/* Events Preview Section */}
-        <EventsPreview events={events} maxItems={4} />
+        {/* Events Preview Section - Affiché seulement si activé */}
+        <FeatureGate feature="events">
+          <EventsPreview events={events} maxItems={4} />
+        </FeatureGate>
 
-        {/* Blog Preview Section */}
-        <BlogPreview posts={blogPosts} maxItems={3} />
+        {/* Blog Preview Section - Affiché seulement si activé */}
+        <FeatureGate feature="blog">
+          <BlogPreview posts={blogPosts} maxItems={3} />
+        </FeatureGate>
 
         {/* Members Carousel Section */}
         <MembersCarousel members={members} autoPlay={true} showDots={true} />
 
-        {/* Partners Carousel Section */}
-        <PartnersCarousel partners={partners} autoPlay={true} />
+        {/* Partners Carousel Section - Affiché seulement si activé */}
+        <FeatureGate feature="partners">
+          <PartnersCarousel partners={partners} autoPlay={true} />
+        </FeatureGate>
       </main>
     </>
   );

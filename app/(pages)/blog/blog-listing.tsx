@@ -51,7 +51,7 @@ export function BlogListing({
 
 
   const handleTagFilter = (tag: string) => {
-    const params = new URLSearchParams(searchParams.toString())
+    const params = new URLSearchParams((searchParams?.toString() ?? ''))
     
     if (selectedTag === tag) {
       params.delete('tag')
@@ -65,7 +65,7 @@ export function BlogListing({
   }
 
   const handlePageChange = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString())
+    const params = new URLSearchParams((searchParams?.toString() ?? ''))
     
     if (page === 1) {
       params.delete('page')
@@ -106,32 +106,47 @@ export function BlogListing({
           title="Expertise & Insights"
           subtitle="Analyses et Découvertes"
           description="Découvrez les dernières actualités et analyses sur le Cloud Computing, Edge Computing, IoT, Green Computing et Federated Learning par les experts du C5IN."
-          stats={[
-            { value: totalPosts, label: "Articles", color: "blue" },
-            { value: availableTags.length, label: "Sujets", color: "green" },
-            { value: "5", label: "Experts", color: "purple" },
-            { value: "12", label: "Domaines", color: "orange" }
+          breadcrumb={[
+            { label: "Blog", icon: Sparkles }
           ]}
         >
-          <div className="flex items-center justify-end mr-16 gap-4">
+          <div className="flex flex-col gap-6">
+            {/* Statistiques */}
+            <div className="flex flex-wrap gap-4 justify-center">
+              <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
+                {totalPosts} Articles
+              </span>
+              <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
+                {availableTags.length} Sujets
+              </span>
+              <span className="bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium">
+                5 Experts
+              </span>
+              <span className="bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-medium">
+                12 Domaines
+              </span>
+            </div>
+            
             {/* View Mode Toggle */}
-            <div className="flex items-center gap-1 bg-white rounded-lg p-1 shadow-sm">
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('grid')}
-                className="rounded-md"
-              >
-                <Grid3X3 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'list' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('list')}
-                className="rounded-md"
-              >
-                <List className="h-4 w-4" />
-              </Button>
+            <div className="flex items-center justify-center">
+              <div className="flex items-center gap-1 bg-white rounded-lg p-1 shadow-sm">
+                <Button
+                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('grid')}
+                  className="rounded-md"
+                >
+                  <Grid3X3 className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === 'list' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('list')}
+                  className="rounded-md"
+                >
+                  <List className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </PageHeader>

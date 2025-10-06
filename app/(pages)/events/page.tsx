@@ -105,13 +105,25 @@ export default async function EventsPage() {
         title="Innovation & Rencontres"
         subtitle="Workshops & Conférences"
         description="Découvrez tous les événements organisés par C5IN : workshops, conférences, séminaires et formations dans les domaines du Cloud Computing, Edge Computing, IoT, Green Computing et Federated Learning."
-        stats={[
-          { value: result.pagination.totalItems, label: "Événements", color: "blue" },
-          { value: allTags.length, label: "Thématiques", color: "green" },
-          { value: "15+", label: "Intervenants", color: "purple" },
-          { value: "500+", label: "Participants", color: "orange" }
+        breadcrumb={[
+          { label: "Événements", icon: Calendar }
         ]}
-      />
+      >
+        <div className="flex flex-wrap gap-4 justify-center">
+          <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
+            {result.pagination.totalItems} Événements
+          </span>
+          <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
+            {allTags.length} Thématiques
+          </span>
+          <span className="bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium">
+            15+ Intervenants
+          </span>
+          <span className="bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-medium">
+            500+ Participants
+          </span>
+        </div>
+      </PageHeader>
 
       <div className="container mx-auto px-4  pb-12">
         <Suspense fallback={<EventsLoadingSkeleton />}>
